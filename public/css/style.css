@@ -5,3 +5,7 @@
 .input-group-text {
   margin-left: 0 !important;
 }
+
+.text-small {
+  font-size: 0.75em;
+}
