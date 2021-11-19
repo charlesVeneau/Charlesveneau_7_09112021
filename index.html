@@ -33,21 +33,60 @@
     </header>
     <main class="container">
       <section class="row mainSearch">
-        <div class="input-group p-1 border-0">
-          <input
-            type="text"
-            class="form-control border-0 bg-dark bg-opacity-10 p-3"
-            placeholder="Rechercher un ingrédient, appareil, ustensile ou une recette"
-            aria-label="Search"
-            aria-describedby="basic-addon1"
-          />
-          <span
-            class="input-group-text border-0 bg-dark bg-opacity-10 p-4"
-            id="basic-addon1"
-          >
-            <i class="fa fa-search"></i>
-          </span>
+        <div class="col-12">
+          <div class="input-group p-1 border-0">
+            <input
+              type="text"
+              class="form-control border-0 bg-dark bg-opacity-10 p-3"
+              placeholder="Rechercher un ingrédient, appareil, ustensile ou une recette"
+              aria-label="Search"
+              aria-describedby="basic-addon1"
+            />
+            <span
+              class="input-group-text border-0 bg-dark bg-opacity-10 p-4"
+              id="basic-addon1"
+            >
+              <i class="fa fa-search"></i>
+            </span>
+          </div>
         </div>
+      </section>
+      <section class="row tags mt-4">
+        <div class="col-1">
+          <button class="btn btn-primary" type="button">
+            Coco <i class="far fa-times-circle"></i>
+          </button>
+        </div>
+      </section>
+      <section class="row dropdowns mt-3">
+        <!-- <div class="col-2">
+          <div class="input-group border-0">
+            <input
+              type="text"
+              class="form-control bg-primary border-primary text-white p-3"
+              placeholder="Ingrédients"
+              aria-label="Ingrédients"
+            />
+            <button
+              type="button"
+              class="
+                btn
+                bg-primary
+                text-white
+                dropdown-toggle dropdown-toggle-split
+              "
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <span class="visually-hidden">Toggle Dropdown</span>
+            </button>
+            <ul
+              class="dropdown-menu dropdown-menu-end bg-primary border-primary"
+            >
+              <li><a class="dropdown-item text-white" href="#">Action</a></li>
+            </ul>
+          </div>
+        </div> -->
       </section>
       <section class="row row-cols-3 mt-4 g-5 cardsGallery">
         <!-- <article class="col-4">

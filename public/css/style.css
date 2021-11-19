@@ -9,3 +9,7 @@
 .text-small {
   font-size: 0.75em;
 }
+
+.dropdowns .form-control::-webkit-input-placeholder {
+  color: #fff;
+}
