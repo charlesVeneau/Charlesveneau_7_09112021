@@ -89,9 +89,9 @@ function createDropdowns(recipes) {
   //create all 3 dropdowns main element
   const ingredientsDropdown = document.createElement("div");
   ingredientsDropdown.classList.add("ingredients", "col-2");
-  ingredientsDropdown.innerHTML = `<input
+  ingredientsDropdown.innerHTML = `<div class="input-group"><input
               type="text"
-              class="form-control bg-primary border-primary text-white p-3"
+              class="form-control bg-primary border-0 text-white p-3"
               placeholder="Ingrédients"
               aria-label="Ingrédients"
             />
@@ -109,14 +109,15 @@ function createDropdowns(recipes) {
               <span class="visually-hidden">Toggle Dropdown</span>
             </button>
             <ul
-              class="dropdown-menu dropdown-menu-end bg-primary border-primary"
+              class="dropdown-menu dropdown-menu-end bg-primary border-0"
             >
-            </ul>`;
+            <div class="container"></div>
+            </ul></div>`;
   const appliancesDropdown = document.createElement("div");
   appliancesDropdown.classList.add("appliances", "col-2");
-  appliancesDropdown.innerHTML = `<input
+  appliancesDropdown.innerHTML = `<div class="input-group"><input
             type="text"
-            class="form-control bg-success border-success text-white p-3"
+            class="form-control bg-success border-0 text-white p-3"
               placeholder="Appareil"
               aria-label="Appareil"
             />
@@ -134,14 +135,15 @@ function createDropdowns(recipes) {
               <span class="visually-hidden">Toggle Dropdown</span>
             </button>
             <ul
-              class="dropdown-menu dropdown-menu-end bg-success border-success"
+              class="dropdown-menu dropdown-menu-end bg-success border-0"
             >
-            </ul>`;
+            <div class="container"></div>
+            </ul></div>`;
   const ustensilsDropdown = document.createElement("div");
   ustensilsDropdown.classList.add("ustensils", "col-2");
-  ustensilsDropdown.innerHTML = `<input
+  ustensilsDropdown.innerHTML = `<div class="input-group"><input
               type="text"
-              class="form-control bg-danger border-danger text-white p-3"
+              class="form-control bg-danger border-0 text-white p-3"
               placeholder="Ustensiles"
               aria-label="Ustensiles"
             />
@@ -159,24 +161,25 @@ function createDropdowns(recipes) {
               <span class="visually-hidden">Toggle Dropdown</span>
             </button>
             <ul
-              class="dropdown-menu dropdown-menu-end bg-danger border-danger"
+              class="dropdown-menu dropdown-menu-end bg-danger border-0"
             >
-            </ul>`;
+            <div class="container"></div>
+            </ul></div>`;
   getNecessary(recipes);
   //go all through all array entries and push everyone into the dropdown list
-  ingredients.forEach((ingredient) => {
+  ingredients.forEach((ingredient, index) => {
     const listElt = document.createElement("li");
     listElt.innerHTML = `<a class="dropdown-item text-white" href="#" data-value="${ingredient}">${ingredient}</a>`;
     ingredientsDropdown.querySelector(".dropdown-menu").appendChild(listElt);
   });
   dropdownSection.appendChild(ingredientsDropdown);
-  appliances.forEach((appliance) => {
+  appliances.forEach((appliance, index) => {
     const listElt = document.createElement("li");
     listElt.innerHTML = `<a class="dropdown-item text-white" href="#" data-value="${appliance}">${appliance}</a>`;
     appliancesDropdown.querySelector(".dropdown-menu").appendChild(listElt);
   });
   dropdownSection.appendChild(appliancesDropdown);
-  ustensils.forEach((ustensil) => {
+  ustensils.forEach((ustensil, index) => {
     const listElt = document.createElement("li");
     listElt.innerHTML = `<a class="dropdown-item text-white" href="#" data-value="${ustensil}">${ustensil}</a>`;
     ustensilsDropdown.querySelector(".dropdown-menu").appendChild(listElt);
@@ -196,13 +199,35 @@ function getNecessary(recipes) {
     });
   });
   //clean the necessaries array and sort it alphabeticly
-  cleanAndSort(appliances);
-  cleanAndSort(ustensils);
-  cleanAndSort(ingredients);
+  appliances.sort((a, b) => (a < b ? -1 : 1));
+  let temp = appliances;
+  appliances = temp.filter((v, i) => {
+    return temp.indexOf(v) == i;
+  });
+  ustensils.sort((a, b) => (a < b ? -1 : 1));
+  temp = ustensils;
+  ustensils = temp.filter((v, i) => {
+    return temp.indexOf(v) == i;
+  });
+  ingredients.sort((a, b) => (a < b ? -1 : 1));
+  temp = ingredients;
+  ingredients = temp.filter((v, i) => {
+    return temp.indexOf(v) == i;
+  });
 }
 
 function cleanAndSort(array) {
-  array = array.filter((value, index) => array.indexOf(value) == index);
   array.sort((a, b) => (a < b ? -1 : 1));
-  console.log(array);
+  let temp = array;
+  array = temp.filter((v, i) => {
+    return temp.indexOf(v) == i;
+  });
+  /*   console.log(array);
+  return array; */
 }
+
+/* 
+Supprimer les doublons sur les filtres (ingrédients, appareil et ustensiles)
+Limiter les ingrédients à 30 
+Terminer l'intégration CSS
+Rédiger la documentation pour les algorithmes de recherche */

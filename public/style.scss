@@ -1,0 +1,60 @@
+$primary: #3282f7;
+$primary-light: #5a95ee;
+$success: #68d9a4;
+$success-light: #93f1c5;
+$danger: #ed6454;
+$danger-light: #eb9289;
+$grey: #e7e7e7;
+
+.mainColor {
+  color: #d04f4f;
+}
+
+.input-group-text {
+  margin-left: 0 !important;
+}
+
+.text-small {
+  font-size: 0.75em;
+}
+
+.tags {
+  .btn-primary {
+    background-color: $primary !important;
+  }
+  .btn-success {
+    background-color: $success !important;
+  }
+  .btn-danger {
+    background-color: $danger !important;
+  }
+}
+.dropdowns {
+  .bg-primary {
+    background-color: $primary !important;
+    .dropdown-item {
+      &:hover {
+        background-color: $primary-light !important;
+      }
+    }
+  }
+  .bg-success {
+    background-color: $success !important;
+    .dropdown-item {
+      &:hover {
+        background-color: $success-light !important;
+      }
+    }
+  }
+  .bg-danger {
+    background-color: $danger !important;
+    .dropdown-item {
+      &:hover {
+        background-color: $danger-light !important;
+      }
+    }
+  }
+  .form-control::-webkit-input-placeholder {
+    color: #fff;
+  }
+}

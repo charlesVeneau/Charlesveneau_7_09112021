@@ -10,6 +10,34 @@
   font-size: 0.75em;
 }
 
+.tags .btn-primary {
+  background-color: #3282f7 !important;
+}
+.tags .btn-success {
+  background-color: #68d9a4 !important;
+}
+.tags .btn-danger {
+  background-color: #ed6454 !important;
+}
+
+.dropdowns .bg-primary {
+  background-color: #3282f7 !important;
+}
+.dropdowns .bg-primary .dropdown-item:hover {
+  background-color: #5a95ee !important;
+}
+.dropdowns .bg-success {
+  background-color: #68d9a4 !important;
+}
+.dropdowns .bg-success .dropdown-item:hover {
+  background-color: #93f1c5 !important;
+}
+.dropdowns .bg-danger {
+  background-color: #ed6454 !important;
+}
+.dropdowns .bg-danger .dropdown-item:hover {
+  background-color: #eb9289 !important;
+}
 .dropdowns .form-control::-webkit-input-placeholder {
   color: #fff;
-}
+}/*# sourceMappingURL=style.css.map */
