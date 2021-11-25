@@ -13,10 +13,10 @@ let fetchData = async () => {
 
 fetchData()
   .then((data) => {
-    console.log(data);
+    //console.log(data);
     recipes = data.recipes;
     createGallery(recipes);
-    createDropdowns(recipes);
+    getDropdowns(recipes);
   })
   .catch((err) => {
     console.log(err);
@@ -83,108 +83,10 @@ function getUnits(ingredient) {
   }
 }
 
-function createDropdowns(recipes) {
-  //select the correct section
-  const dropdownSection = document.querySelector(".dropdowns");
-  //create all 3 dropdowns main element
-  const ingredientsDropdown = document.createElement("div");
-  ingredientsDropdown.classList.add("ingredients", "col-2");
-  ingredientsDropdown.innerHTML = `<div class="input-group"><input
-              type="text"
-              class="form-control bg-primary border-0 text-white p-3"
-              placeholder="Ingrédients"
-              aria-label="Ingrédients"
-            />
-            <button
-              type="button"
-              class="
-                btn
-                bg-primary
-                text-white
-                dropdown-toggle dropdown-toggle-split
-              "
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              <span class="visually-hidden">Toggle Dropdown</span>
-            </button>
-            <ul
-              class="dropdown-menu dropdown-menu-end bg-primary border-0"
-            >
-            <div class="container"></div>
-            </ul></div>`;
-  const appliancesDropdown = document.createElement("div");
-  appliancesDropdown.classList.add("appliances", "col-2");
-  appliancesDropdown.innerHTML = `<div class="input-group"><input
-            type="text"
-            class="form-control bg-success border-0 text-white p-3"
-              placeholder="Appareil"
-              aria-label="Appareil"
-            />
-            <button
-              type="button"
-              class="
-                btn
-                bg-success
-                text-white
-                dropdown-toggle dropdown-toggle-split
-              "
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              <span class="visually-hidden">Toggle Dropdown</span>
-            </button>
-            <ul
-              class="dropdown-menu dropdown-menu-end bg-success border-0"
-            >
-            <div class="container"></div>
-            </ul></div>`;
-  const ustensilsDropdown = document.createElement("div");
-  ustensilsDropdown.classList.add("ustensils", "col-2");
-  ustensilsDropdown.innerHTML = `<div class="input-group"><input
-              type="text"
-              class="form-control bg-danger border-0 text-white p-3"
-              placeholder="Ustensiles"
-              aria-label="Ustensiles"
-            />
-            <button
-              type="button"
-              class="
-                btn
-                bg-danger
-                text-white
-                dropdown-toggle dropdown-toggle-split
-              "
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              <span class="visually-hidden">Toggle Dropdown</span>
-            </button>
-            <ul
-              class="dropdown-menu dropdown-menu-end bg-danger border-0"
-            >
-            <div class="container"></div>
-            </ul></div>`;
+function getDropdowns(recipes) {
   getNecessary(recipes);
   //go all through all array entries and push everyone into the dropdown list
-  ingredients.forEach((ingredient, index) => {
-    const listElt = document.createElement("li");
-    listElt.innerHTML = `<a class="dropdown-item text-white" href="#" data-value="${ingredient}">${ingredient}</a>`;
-    ingredientsDropdown.querySelector(".dropdown-menu").appendChild(listElt);
-  });
-  dropdownSection.appendChild(ingredientsDropdown);
-  appliances.forEach((appliance, index) => {
-    const listElt = document.createElement("li");
-    listElt.innerHTML = `<a class="dropdown-item text-white" href="#" data-value="${appliance}">${appliance}</a>`;
-    appliancesDropdown.querySelector(".dropdown-menu").appendChild(listElt);
-  });
-  dropdownSection.appendChild(appliancesDropdown);
-  ustensils.forEach((ustensil, index) => {
-    const listElt = document.createElement("li");
-    listElt.innerHTML = `<a class="dropdown-item text-white" href="#" data-value="${ustensil}">${ustensil}</a>`;
-    ustensilsDropdown.querySelector(".dropdown-menu").appendChild(listElt);
-  });
-  dropdownSection.appendChild(ustensilsDropdown);
+  makeDropdowns(ingredients, appliances, ustensils);
 }
 
 function getNecessary(recipes) {
@@ -226,8 +128,88 @@ function cleanAndSort(array) {
   return array; */
 }
 
-/* 
-Supprimer les doublons sur les filtres (ingrédients, appareil et ustensiles)
-Limiter les ingrédients à 30 
-Terminer l'intégration CSS
-Rédiger la documentation pour les algorithmes de recherche */
+function splitArray(array) {
+  const TempArray = array.slice(0, 30);
+  const mainArray = [
+    TempArray.slice(0, 10),
+    TempArray.slice(10, 20),
+    TempArray.slice(20, 30),
+  ];
+  return mainArray;
+}
+
+function makeDropdowns(ingredients, appliances, ustensils) {
+  //select all 3 dropdowns main element
+  const ingredientsDropdown = document.querySelector(".ingredientsDropdown");
+  const appliancesDropdown = document.querySelector(".appliancesDropdown");
+  const ustensilsDropdown = document.querySelector(".ustensilsDropdown");
+
+  splitArray(ingredients).forEach((array) => {
+    const dropdownCol = document.createElement("div");
+    dropdownCol.classList.add("col-4", "p-0");
+    array.forEach((ingredient) => {
+      let listElt = document.createElement("li");
+      listElt.innerHTML = `<a class="dropdown-item text-white" href="#" data-value="${ingredient}">${ingredient}</a>`;
+      dropdownCol.appendChild(listElt);
+    });
+    ingredientsDropdown
+      .querySelector(".dropdown-menu .row")
+      .append(dropdownCol);
+  });
+
+  splitArray(appliances).forEach((array) => {
+    const dropdownCol = document.createElement("div");
+    dropdownCol.classList.add("col-4", "p-0");
+    array.forEach((appliance) => {
+      let listElt = document.createElement("li");
+      listElt.innerHTML = `<a class="dropdown-item text-white" href="#" data-value="${appliance}">${appliance}</a>`;
+      dropdownCol.appendChild(listElt);
+    });
+    appliancesDropdown.querySelector(".dropdown-menu .row").append(dropdownCol);
+  });
+
+  splitArray(ustensils).forEach((array) => {
+    const dropdownCol = document.createElement("div");
+    dropdownCol.classList.add("col-4", "p-0");
+    array.forEach((ustensil) => {
+      let listElt = document.createElement("li");
+      listElt.innerHTML = `<a class="dropdown-item text-white" href="#" data-value="${ustensil}">${ustensil}</a>`;
+      dropdownCol.appendChild(listElt);
+    });
+    ustensilsDropdown.querySelector(".dropdown-menu .row").append(dropdownCol);
+  });
+}
+
+//Adapt the dropdown width by changing the class list
+const dropdownBtns = document.querySelectorAll(".dropdowns .dropdown-toggle");
+dropdownBtns.forEach((btn) => {
+  btn.addEventListener("click", function () {
+    if (this.classList.contains("show")) {
+      this.parentNode.parentNode.classList.remove("col-2");
+      this.parentNode.parentNode.classList.add("col-6");
+      this.parentNode
+        .querySelector("input.form-control")
+        .classList.add("rounded-top");
+    } else {
+      this.parentNode.parentNode.classList.add("col-2");
+      this.parentNode.parentNode.classList.remove("col-6");
+      this.parentNode
+        .querySelector("input.form-control")
+        .classList.remove("rounded-top");
+    }
+  });
+});
+
+document.body.addEventListener("click", (e) => {
+  if (!e.target.classList.contains("dropdown-toggle")) {
+    document.querySelectorAll(".dropdowns .dropdown-toggle").forEach((btn) => {
+      if (btn.classList.contains("show")) {
+        btn.parentNode.parentNode.classList.add("col-2");
+        btn.parentNode.parentNode.classList.remove("col-6");
+        this.parentNode
+          .querySelector("input.form-control")
+          .classList.remove("rounded-top");
+      }
+    });
+  }
+});

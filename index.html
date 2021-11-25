@@ -59,11 +59,11 @@
         </div>
       </section>
       <section class="row dropdowns mt-3">
-        <!-- <div class="col-2">
-          <div class="input-group border-0">
+        <div class="col-2 ingredientsDropdown">
+          <div class="input-group">
             <input
               type="text"
-              class="form-control bg-primary border-primary text-white p-3"
+              class="form-control bg-primary border-0 text-white p-3"
               placeholder="Ingrédients"
               aria-label="Ingrédients"
             />
@@ -80,13 +80,65 @@
             >
               <span class="visually-hidden">Toggle Dropdown</span>
             </button>
-            <ul
-              class="dropdown-menu dropdown-menu-end bg-primary border-primary"
-            >
-              <li><a class="dropdown-item text-white" href="#">Action</a></li>
+            <ul class="dropdown-menu dropdown-menu-end bg-primary border-0">
+              <div class="container">
+                <div class="row"></div>
+              </div>
             </ul>
           </div>
-        </div> -->
+        </div>
+        <div class="col-2 appliancesDropdown">
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control bg-success border-0 text-white p-3"
+              placeholder="Appareil"
+              aria-label="Appareil"
+            />
+            <button
+              type="button"
+              class="
+                btn
+                bg-success
+                text-white
+                dropdown-toggle dropdown-toggle-split
+              "
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <span class="visually-hidden">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end bg-success border-0">
+              <div class="container"><div class="row"></div></div>
+            </ul>
+          </div>
+        </div>
+        <div class="col-2 ustensilsDropdown">
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control bg-danger border-0 text-white p-3"
+              placeholder="Ustensiles"
+              aria-label="Ustensiles"
+            />
+            <button
+              type="button"
+              class="
+                btn
+                bg-danger
+                text-white
+                dropdown-toggle dropdown-toggle-split
+              "
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <span class="visually-hidden">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end bg-danger border-0">
+              <div class="container"><div class="row"></div></div>
+            </ul>
+          </div>
+        </div>
       </section>
       <section class="row row-cols-3 mt-4 g-5 cardsGallery">
         <!-- <article class="col-4">
