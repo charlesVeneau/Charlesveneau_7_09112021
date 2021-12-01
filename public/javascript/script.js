@@ -149,7 +149,7 @@ function makeDropdowns(ingredients, appliances, ustensils) {
     const dropdownCol = document.createElement("div");
     dropdownCol.classList.add("col-4", "p-0");
     array.forEach((ingredient) => {
-      let listElt = document.createElement("li");
+      let listElt = document.createElement("div");
       listElt.innerHTML = `<a class="dropdown-item text-white" href="#" data-value="${ingredient}">${ingredient}</a>`;
       dropdownCol.appendChild(listElt);
     });
@@ -162,7 +162,7 @@ function makeDropdowns(ingredients, appliances, ustensils) {
     const dropdownCol = document.createElement("div");
     dropdownCol.classList.add("col-4", "p-0");
     array.forEach((appliance) => {
-      let listElt = document.createElement("li");
+      let listElt = document.createElement("div");
       listElt.innerHTML = `<a class="dropdown-item text-white" href="#" data-value="${appliance}">${appliance}</a>`;
       dropdownCol.appendChild(listElt);
     });
@@ -173,7 +173,7 @@ function makeDropdowns(ingredients, appliances, ustensils) {
     const dropdownCol = document.createElement("div");
     dropdownCol.classList.add("col-4", "p-0");
     array.forEach((ustensil) => {
-      let listElt = document.createElement("li");
+      let listElt = document.createElement("div");
       listElt.innerHTML = `<a class="dropdown-item text-white" href="#" data-value="${ustensil}">${ustensil}</a>`;
       dropdownCol.appendChild(listElt);
     });
