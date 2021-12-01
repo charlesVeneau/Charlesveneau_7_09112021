@@ -6,7 +6,7 @@ let appliances = [];
 let ustensils = [];
 
 let fetchData = async () => {
-  let response = await fetch("../../assets/db.json");
+  let response = await fetch("assets/db.json");
   let data = await response.json();
   return data;
 };
@@ -17,6 +17,7 @@ fetchData()
     recipes = data.recipes;
     createGallery(recipes);
     getDropdowns(recipes);
+    console.log(recipes);
   })
   .catch((err) => {
     console.log(err);
@@ -197,13 +198,32 @@ dropdownBtns.forEach((btn) => {
         .querySelector("input.form-control")
         .classList.remove("rounded-top");
     }
+    /* dropdownBtns.forEach((btn) => {
+      if (btn != this && btn.classList.contains("show")) {
+        this.parentNode.parentNode.classList.add("col-2");
+        this.parentNode.parentNode.classList.remove("col-6");
+        this.parentNode
+          .querySelector("input.form-control")
+          .classList.remove("rounded-top");
+      }
+    }); */
   });
 });
 
-document.body.addEventListener("click", (e) => {
-  if (!e.target.classList.contains("dropdown-toggle")) {
-    document.querySelectorAll(".dropdowns .dropdown-toggle").forEach((btn) => {
-      if (btn.classList.contains("show")) {
+/* document.body.addEventListener("click", (e) => {
+  document
+    .querySelectorAll(".dropdowns .dropdown-toggle")
+    .forEach(function (btn) {
+      if (
+        !e.target.classList.contains("dropdown-toggle") &&
+        btn.classList.contains("show")
+      ) {
+        btn.parentNode.parentNode.classList.remove("col-2");
+        btn.parentNode.parentNode.classList.add("col-6");
+        this.parentNode
+          .querySelector("input.form-control")
+          .classList.add("rounded-top");
+      } else {
         btn.parentNode.parentNode.classList.add("col-2");
         btn.parentNode.parentNode.classList.remove("col-6");
         this.parentNode
@@ -211,5 +231,4 @@ document.body.addEventListener("click", (e) => {
           .classList.remove("rounded-top");
       }
     });
-  }
-});
+}); */
