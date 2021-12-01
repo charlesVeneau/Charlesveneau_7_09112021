@@ -17,7 +17,7 @@ fetchData()
     recipes = data.recipes;
     createGallery(recipes);
     getDropdowns(recipes);
-    console.log(recipes);
+    // console.log(recipes);
   })
   .catch((err) => {
     console.log(err);
@@ -232,3 +232,14 @@ dropdownBtns.forEach((btn) => {
       }
     });
 }); */
+
+/* main input listener, check if the user type 3 characters and print them it the console */
+const searchInput = document.querySelector("#main-search");
+let mainInput = "";
+
+searchInput.addEventListener("keyup", (e) => {
+  if (e.target.value.length >= 3) {
+    mainInput = e.target.value;
+    // console.log(mainInput);
+  }
+});
