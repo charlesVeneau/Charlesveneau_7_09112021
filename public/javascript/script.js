@@ -93,6 +93,9 @@ function getDropdowns(recipes) {
 }
 
 function getNecessary(recipes) {
+  appliances.length = 0;
+  ustensils.length = 0;
+  ingredients.length = 0;
   //retrive in all the recipes, the appliances ustensils and ingredients
   recipes.forEach((recipe) => {
     appliances.push(recipe.appliance.toLowerCase());
@@ -121,15 +124,14 @@ function getNecessary(recipes) {
   });
 }
 
-function cleanAndSort(array) {
+/* function cleanAndSort(array) {
   array.sort((a, b) => (a < b ? -1 : 1));
   let temp = array;
   array = temp.filter((v, i) => {
     return temp.indexOf(v) == i;
   });
-  /*   console.log(array);
-  return array; */
-}
+  return array;
+} */
 
 function splitArray(array) {
   const TempArray = array.slice(0, 30);
@@ -143,9 +145,18 @@ function splitArray(array) {
 
 function makeDropdowns(ingredients, appliances, ustensils) {
   //select all 3 dropdowns main element
-  const ingredientsDropdown = document.querySelector(".ingredientsDropdown");
-  const appliancesDropdown = document.querySelector(".appliancesDropdown");
-  const ustensilsDropdown = document.querySelector(".ustensilsDropdown");
+  const ingredientsDropdown = document.querySelector(
+    ".ingredientsDropdown .dropdown-menu .row"
+  );
+  ingredientsDropdown.innerHTML = "";
+  const appliancesDropdown = document.querySelector(
+    ".appliancesDropdown .dropdown-menu .row"
+  );
+  appliancesDropdown.innerHTML = "";
+  const ustensilsDropdown = document.querySelector(
+    ".ustensilsDropdown .dropdown-menu .row"
+  );
+  ustensilsDropdown.innerHTML = "";
 
   splitArray(ingredients).forEach((array) => {
     const dropdownCol = document.createElement("div");
@@ -155,9 +166,7 @@ function makeDropdowns(ingredients, appliances, ustensils) {
       listElt.innerHTML = `<a class="dropdown-item text-white" href="#" data-value="${ingredient}">${ingredient}</a>`;
       dropdownCol.appendChild(listElt);
     });
-    ingredientsDropdown
-      .querySelector(".dropdown-menu .row")
-      .append(dropdownCol);
+    ingredientsDropdown.append(dropdownCol);
   });
 
   splitArray(appliances).forEach((array) => {
@@ -168,7 +177,7 @@ function makeDropdowns(ingredients, appliances, ustensils) {
       listElt.innerHTML = `<a class="dropdown-item text-white" href="#" data-value="${appliance}">${appliance}</a>`;
       dropdownCol.appendChild(listElt);
     });
-    appliancesDropdown.querySelector(".dropdown-menu .row").append(dropdownCol);
+    appliancesDropdown.append(dropdownCol);
   });
 
   splitArray(ustensils).forEach((array) => {
@@ -179,7 +188,7 @@ function makeDropdowns(ingredients, appliances, ustensils) {
       listElt.innerHTML = `<a class="dropdown-item text-white" href="#" data-value="${ustensil}">${ustensil}</a>`;
       dropdownCol.appendChild(listElt);
     });
-    ustensilsDropdown.querySelector(".dropdown-menu .row").append(dropdownCol);
+    ustensilsDropdown.append(dropdownCol);
   });
 }
 
@@ -270,9 +279,12 @@ function findRecipe(array) {
     }
     i++;
   }
-  console.log(recipesFiltered);
+  //create a new gallery with the filtered recipes
+  if (recipesFiltered.length > 0) {
+    createGallery(recipesFiltered);
+    getDropdowns(recipesFiltered);
+  }
   //else display the not found message
-  if (recipesFiltered.length > 0) createGallery(recipesFiltered);
   else errorMessage();
 }
 
