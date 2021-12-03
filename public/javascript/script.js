@@ -25,6 +25,8 @@ fetchData()
 
 function createGallery(recipes) {
   const gallery = document.querySelector(".cardsGallery");
+  if (gallery.classList.contains("justify-content-center"))
+    gallery.classList.remove("justify-content-center");
   gallery.innerHTML = "";
   recipes.forEach((recipe) => {
     const article = document.createElement("article");
@@ -257,7 +259,7 @@ searchInput.addEventListener("keyup", (e) => {
     } else {
       createGallery(recipes);
     }
-  }, 2000);
+  }, 1000);
 });
 
 function findRecipe(array) {
@@ -294,6 +296,7 @@ function findRecipe(array) {
 
 function errorMessage() {
   const gallery = document.querySelector(".cardsGallery");
+  gallery.classList.add("justify-content-center");
   gallery.innerHTML = "";
   const message = document.createElement("p");
   message.classList.add("col-8", "justify-content-center");
