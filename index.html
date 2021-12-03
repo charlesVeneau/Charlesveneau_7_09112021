@@ -31,7 +31,7 @@
         <h1 class="col-12 text-center mainColor">Les petits plats</h1>
       </div>
     </header>
-    <main class="container">
+    <main class="container-md container-fluid">
       <section class="row mainSearch">
         <div class="col-12">
           <div class="input-group p-1 border-0">
@@ -60,7 +60,7 @@
         </div>
       </section>
       <section class="row dropdowns mt-3">
-        <div class="col-2 ingredientsDropdown">
+        <div class="col-12 col-sm-4 col-lg-2 mb-3 ingredientsDropdown">
           <div class="input-group">
             <input
               type="text"
@@ -88,7 +88,7 @@
             </div>
           </div>
         </div>
-        <div class="col-2 appliancesDropdown">
+        <div class="col-12 col-sm-4 col-lg-2 mb-3 appliancesDropdown">
           <div class="input-group">
             <input
               type="text"
@@ -114,7 +114,7 @@
             </div>
           </div>
         </div>
-        <div class="col-2 ustensilsDropdown">
+        <div class="col-12 col-sm-4 col-lg-2 mb-3 ustensilsDropdown">
           <div class="input-group">
             <input
               type="text"
@@ -141,7 +141,9 @@
           </div>
         </div>
       </section>
-      <section class="row row-cols-3 mt-4 g-5 cardsGallery"></section>
+      <section
+        class="row row-cols-1 row-cols-sm-2 row-cols-md-3 mt-4 g-5 cardsGallery"
+      ></section>
     </main>
     <script src="./public/javascript/script.js"></script>
     <script
