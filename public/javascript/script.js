@@ -17,7 +17,6 @@ fetchData()
     //console.log(data);
     recipes = data.recipes;
     createGallery(recipes);
-    getDropdowns(recipes);
     // console.log(recipes);
   })
   .catch((err) => {
@@ -68,6 +67,7 @@ function createGallery(recipes) {
     });
     gallery.appendChild(article);
   });
+  getDropdowns(recipes);
 }
 
 function truncateString(str, num) {
@@ -249,11 +249,15 @@ const searchInput = document.querySelector("#main-search");
 let mainInput = "";
 
 searchInput.addEventListener("keyup", (e) => {
-  if (e.target.value.length >= 3) {
-    mainInput = e.target.value.trim();
-    //set an interval to let the user finish is interaction with is research
-    findRecipe(recipes);
-  }
+  //set an interval to let the user finish is interaction with is research
+  setTimeout(() => {
+    if (e.target.value.length >= 3) {
+      mainInput = e.target.value.trim();
+      findRecipe(recipes);
+    } else {
+      createGallery(recipes);
+    }
+  }, 2000);
 });
 
 function findRecipe(array) {
@@ -282,7 +286,7 @@ function findRecipe(array) {
   //create a new gallery with the filtered recipes
   if (recipesFiltered.length > 0) {
     createGallery(recipesFiltered);
-    getDropdowns(recipesFiltered);
+    // getDropdowns(recipesFiltered);
   }
   //else display the not found message
   else errorMessage();
