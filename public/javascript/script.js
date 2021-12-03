@@ -4,6 +4,7 @@ let recipes;
 let ingredients = [];
 let appliances = [];
 let ustensils = [];
+let recipesFiltered = [];
 
 let fetchData = async () => {
   let response = await fetch("assets/db.json");
@@ -25,6 +26,7 @@ fetchData()
 
 function createGallery(recipes) {
   const gallery = document.querySelector(".cardsGallery");
+  gallery.innerHTML = "";
   recipes.forEach((recipe) => {
     const article = document.createElement("article");
     article.classList.add("col", "cardsGallery__card", "mt-0", "mb-5");
@@ -239,7 +241,47 @@ let mainInput = "";
 
 searchInput.addEventListener("keyup", (e) => {
   if (e.target.value.length >= 3) {
-    mainInput = e.target.value;
-    // console.log(mainInput);
+    mainInput = e.target.value.trim();
+    //set an interval to let the user finish is interaction with is research
+    findRecipe(recipes);
   }
 });
+
+function findRecipe(array) {
+  //loop through all the array elements
+  console.log(recipes);
+  recipesFiltered.length = 0;
+  for (let i = 0; i < array.length; i++) {
+    //for every element
+    //is the mainInput is in the title or description
+    if (
+      array[i].name.includes(mainInput) ||
+      array[i].description.includes(mainInput)
+    )
+      //if yes, then push the element into the recipesFiltered array
+      recipesFiltered.push(array[i]);
+    //else is the mainInput is in the ingredients array
+    else {
+      for (let j = 0; j < array[i].ingredients.length; j++) {
+        //if yes, then push the element into the recipesFiltered array
+        if (array[i].ingredients[j].ingredient.includes(mainInput))
+          recipesFiltered.push(array[i]);
+      }
+    }
+    i++;
+  }
+  console.log(recipesFiltered);
+  //else display the not found message
+  if (recipesFiltered.length > 0) createGallery(recipesFiltered);
+  else errorMessage();
+}
+
+function errorMessage() {
+  const gallery = document.querySelector(".cardsGallery");
+  gallery.innerHTML = "";
+  const message = document.createElement("p");
+  message.classList.add("col-8", "justify-content-center");
+  message.innerText = ` Aucune recette ne correspond à votre critère… vous pouvez chercher « tarte aux pommes », « poisson », etc.`;
+
+  gallery.appendChild(message);
+}
