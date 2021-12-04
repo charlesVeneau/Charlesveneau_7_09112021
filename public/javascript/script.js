@@ -150,7 +150,7 @@ function makeDropdowns(ingredients, appliances, ustensils) {
     dropdownCol.classList.add("col-4", "p-0");
     array.forEach((ingredient) => {
       let listElt = document.createElement("div");
-      listElt.innerHTML = `<a class="dropdown-item text-white" href="#" data-value="${ingredient}">${ingredient}</a>`;
+      listElt.innerHTML = `<a class="dropdown-item text-white fs-6 fs-md-5" href="#" data-value="${ingredient}">${ingredient}</a>`;
       dropdownCol.appendChild(listElt);
     });
     ingredientsDropdown
@@ -163,7 +163,7 @@ function makeDropdowns(ingredients, appliances, ustensils) {
     dropdownCol.classList.add("col-4", "p-0");
     array.forEach((appliance) => {
       let listElt = document.createElement("div");
-      listElt.innerHTML = `<a class="dropdown-item text-white" href="#" data-value="${appliance}">${appliance}</a>`;
+      listElt.innerHTML = `<a class="dropdown-item text-white fs-6 fs-md-5" href="#" data-value="${appliance}">${appliance}</a>`;
       dropdownCol.appendChild(listElt);
     });
     appliancesDropdown.querySelector(".dropdown-menu .row").append(dropdownCol);
@@ -174,7 +174,7 @@ function makeDropdowns(ingredients, appliances, ustensils) {
     dropdownCol.classList.add("col-4", "p-0");
     array.forEach((ustensil) => {
       let listElt = document.createElement("div");
-      listElt.innerHTML = `<a class="dropdown-item text-white" href="#" data-value="${ustensil}">${ustensil}</a>`;
+      listElt.innerHTML = `<a class="dropdown-item text-white fs-6 fs-md-5" href="#" data-value="${ustensil}">${ustensil}</a>`;
       dropdownCol.appendChild(listElt);
     });
     ustensilsDropdown.querySelector(".dropdown-menu .row").append(dropdownCol);
@@ -186,14 +186,14 @@ const dropdownBtns = document.querySelectorAll(".dropdowns .dropdown-toggle");
 dropdownBtns.forEach((btn) => {
   btn.addEventListener("click", function () {
     if (this.classList.contains("show")) {
-      this.parentNode.parentNode.classList.remove("col-2");
-      this.parentNode.parentNode.classList.add("col-6");
+      this.parentNode.parentNode.classList.remove("col-lg-2", "col-sm-4");
+      this.parentNode.parentNode.classList.add("col-lg-6");
       this.parentNode
         .querySelector("input.form-control")
         .classList.add("rounded-top");
     } else {
-      this.parentNode.parentNode.classList.add("col-2");
-      this.parentNode.parentNode.classList.remove("col-6");
+      this.parentNode.parentNode.classList.add("col-lg-2", "col-sm-4");
+      this.parentNode.parentNode.classList.remove("col-lg-6");
       this.parentNode
         .querySelector("input.form-control")
         .classList.remove("rounded-top");
