@@ -4,6 +4,7 @@ let recipes;
 let ingredients = [];
 let appliances = [];
 let ustensils = [];
+let recipesFiltered = [];
 
 let fetchData = async () => {
   let response = await fetch("assets/db.json");
@@ -16,7 +17,6 @@ fetchData()
     //console.log(data);
     recipes = data.recipes;
     createGallery(recipes);
-    getDropdowns(recipes);
     // console.log(recipes);
   })
   .catch((err) => {
@@ -25,6 +25,9 @@ fetchData()
 
 function createGallery(recipes) {
   const gallery = document.querySelector(".cardsGallery");
+  if (gallery.classList.contains("justify-content-center"))
+    gallery.classList.remove("justify-content-center");
+  gallery.innerHTML = "";
   recipes.forEach((recipe) => {
     const article = document.createElement("article");
     article.classList.add("col", "cardsGallery__card", "mt-0", "mb-5");
@@ -66,6 +69,7 @@ function createGallery(recipes) {
     });
     gallery.appendChild(article);
   });
+  getDropdowns(recipes);
 }
 
 function truncateString(str, num) {
@@ -91,6 +95,9 @@ function getDropdowns(recipes) {
 }
 
 function getNecessary(recipes) {
+  appliances.length = 0;
+  ustensils.length = 0;
+  ingredients.length = 0;
   //retrive in all the recipes, the appliances ustensils and ingredients
   recipes.forEach((recipe) => {
     appliances.push(recipe.appliance.toLowerCase());
@@ -119,15 +126,14 @@ function getNecessary(recipes) {
   });
 }
 
-function cleanAndSort(array) {
+/* function cleanAndSort(array) {
   array.sort((a, b) => (a < b ? -1 : 1));
   let temp = array;
   array = temp.filter((v, i) => {
     return temp.indexOf(v) == i;
   });
-  /*   console.log(array);
-  return array; */
-}
+  return array;
+} */
 
 function splitArray(array) {
   const TempArray = array.slice(0, 30);
@@ -141,9 +147,18 @@ function splitArray(array) {
 
 function makeDropdowns(ingredients, appliances, ustensils) {
   //select all 3 dropdowns main element
-  const ingredientsDropdown = document.querySelector(".ingredientsDropdown");
-  const appliancesDropdown = document.querySelector(".appliancesDropdown");
-  const ustensilsDropdown = document.querySelector(".ustensilsDropdown");
+  const ingredientsDropdown = document.querySelector(
+    ".ingredientsDropdown .dropdown-menu .row"
+  );
+  ingredientsDropdown.innerHTML = "";
+  const appliancesDropdown = document.querySelector(
+    ".appliancesDropdown .dropdown-menu .row"
+  );
+  appliancesDropdown.innerHTML = "";
+  const ustensilsDropdown = document.querySelector(
+    ".ustensilsDropdown .dropdown-menu .row"
+  );
+  ustensilsDropdown.innerHTML = "";
 
   splitArray(ingredients).forEach((array) => {
     const dropdownCol = document.createElement("div");
@@ -153,9 +168,7 @@ function makeDropdowns(ingredients, appliances, ustensils) {
       listElt.innerHTML = `<a class="dropdown-item text-white fs-6 fs-md-5" href="#" data-value="${ingredient}">${ingredient}</a>`;
       dropdownCol.appendChild(listElt);
     });
-    ingredientsDropdown
-      .querySelector(".dropdown-menu .row")
-      .append(dropdownCol);
+    ingredientsDropdown.append(dropdownCol);
   });
 
   splitArray(appliances).forEach((array) => {
@@ -166,7 +179,7 @@ function makeDropdowns(ingredients, appliances, ustensils) {
       listElt.innerHTML = `<a class="dropdown-item text-white fs-6 fs-md-5" href="#" data-value="${appliance}">${appliance}</a>`;
       dropdownCol.appendChild(listElt);
     });
-    appliancesDropdown.querySelector(".dropdown-menu .row").append(dropdownCol);
+    appliancesDropdown.append(dropdownCol);
   });
 
   splitArray(ustensils).forEach((array) => {
@@ -177,7 +190,7 @@ function makeDropdowns(ingredients, appliances, ustensils) {
       listElt.innerHTML = `<a class="dropdown-item text-white fs-6 fs-md-5" href="#" data-value="${ustensil}">${ustensil}</a>`;
       dropdownCol.appendChild(listElt);
     });
-    ustensilsDropdown.querySelector(".dropdown-menu .row").append(dropdownCol);
+    ustensilsDropdown.append(dropdownCol);
   });
 }
 
@@ -238,8 +251,56 @@ const searchInput = document.querySelector("#main-search");
 let mainInput = "";
 
 searchInput.addEventListener("keyup", (e) => {
-  if (e.target.value.length >= 3) {
-    mainInput = e.target.value;
-    // console.log(mainInput);
-  }
+  //set an interval to let the user finish is interaction with is research
+  setTimeout(() => {
+    if (e.target.value.length >= 3) {
+      mainInput = e.target.value.trim();
+      findRecipe(recipes);
+    } else {
+      createGallery(recipes);
+    }
+  }, 1000);
 });
+
+function findRecipe(array) {
+  //loop through all the array elements
+  console.log(recipes);
+  recipesFiltered.length = 0;
+  for (let i = 0; i < array.length; i++) {
+    //for every element
+    //is the mainInput is in the title or description
+    if (
+      array[i].name.includes(mainInput) ||
+      array[i].description.includes(mainInput)
+    )
+      //if yes, then push the element into the recipesFiltered array
+      recipesFiltered.push(array[i]);
+    //else is the mainInput is in the ingredients array
+    else {
+      for (let j = 0; j < array[i].ingredients.length; j++) {
+        //if yes, then push the element into the recipesFiltered array
+        if (array[i].ingredients[j].ingredient.includes(mainInput))
+          recipesFiltered.push(array[i]);
+      }
+    }
+    i++;
+  }
+  //create a new gallery with the filtered recipes
+  if (recipesFiltered.length > 0) {
+    createGallery(recipesFiltered);
+    // getDropdowns(recipesFiltered);
+  }
+  //else display the not found message
+  else errorMessage();
+}
+
+function errorMessage() {
+  const gallery = document.querySelector(".cardsGallery");
+  gallery.classList.add("justify-content-center");
+  gallery.innerHTML = "";
+  const message = document.createElement("p");
+  message.classList.add("col-8", "justify-content-center");
+  message.innerText = ` Aucune recette ne correspond à votre critère… vous pouvez chercher « tarte aux pommes », « poisson », etc.`;
+
+  gallery.appendChild(message);
+}
