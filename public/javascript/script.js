@@ -254,7 +254,7 @@ searchInput.addEventListener("keyup", (e) => {
   //set an interval to let the user finish is interaction with is research
   setTimeout(() => {
     if (e.target.value.length >= 3) {
-      mainInput = e.target.value.trim();
+      mainInput = e.target.value.toLowerCase().trim();
       findRecipe(recipes);
     } else {
       createGallery(recipes);
@@ -264,14 +264,15 @@ searchInput.addEventListener("keyup", (e) => {
 
 function findRecipe(array) {
   //loop through all the array elements
-  console.log(recipes);
   recipesFiltered.length = 0;
+  let regex = `[^]*${mainInput}`;
   for (let i = 0; i < array.length; i++) {
     //for every element
     //is the mainInput is in the title or description
+
     if (
-      array[i].name.includes(mainInput) ||
-      array[i].description.includes(mainInput)
+      array[i].name.toLowerCase().match(regex) ||
+      array[i].description.toLowerCase().match(regex)
     )
       //if yes, then push the element into the recipesFiltered array
       recipesFiltered.push(array[i]);
@@ -279,7 +280,7 @@ function findRecipe(array) {
     else {
       for (let j = 0; j < array[i].ingredients.length; j++) {
         //if yes, then push the element into the recipesFiltered array
-        if (array[i].ingredients[j].ingredient.includes(mainInput))
+        if (array[i].ingredients[j].ingredient.toLowerCase().match(regex))
           recipesFiltered.push(array[i]);
       }
     }
