@@ -1,4 +1,5 @@
 // import { createGallery } from "./modules/createGallery.js";
+import { makeDropdown } from "./modules/makeDropdown.js";
 
 let recipes;
 let ingredients = [];
@@ -88,40 +89,6 @@ function getDropdowns(recipes) {
   getNecessary(recipes);
   //go all through all array entries and push everyone into the dropdown list
   makeDropdowns(ingredients, appliances, ustensils);
-
-  //listeners on dropdowns elements
-  const dropdownItems = document.querySelectorAll(".dropdown-item");
-
-  dropdownItems.forEach((item) => {
-    item.addEventListener("click", (e) => {
-      const tagSection = document.querySelector(".row.tags");
-      const tag = document.createElement("div");
-      tag.classList.add("col-auto");
-      switch (item.getAttribute("data-category")) {
-        case "ingredients":
-          tag.innerHTML = `<button class="btn btn-primary text-capitalize" type="button">
-                ${item.innerText} <i class="far fa-times-circle" aria-hidden="true"></i>
-              </button>`;
-          break;
-        case "appliances":
-          tag.innerHTML = `<button class="btn btn-success text-capitalize" type="button">
-                      ${item.innerText} <i class="far fa-times-circle" aria-hidden="true"></i>
-                    </button>`;
-          break;
-        case "ustensils":
-          tag.innerHTML = `<button class="btn btn-danger text-capitalize" type="button">
-                          ${item.innerText} <i class="far fa-times-circle" aria-hidden="true"></i>
-                        </button>`;
-          break;
-        default:
-          break;
-      }
-      tagSection.appendChild(tag);
-      tag.querySelector(".fa-times-circle").addEventListener("click", (e) => {
-        tagSection.removeChild(tag);
-      });
-    });
-  });
 }
 
 function getNecessary(recipes) {
@@ -163,71 +130,39 @@ function cleanAndSort(array) {
   return array; */
 }
 
-function splitArray(array) {
-  const TempArray = array.slice(0, 30);
-  const mainArray = [
-    TempArray.slice(0, 10),
-    TempArray.slice(10, 20),
-    TempArray.slice(20, 30),
-  ];
-  return mainArray;
-}
-
 function makeDropdowns(ingredients, appliances, ustensils) {
   //select all 3 dropdowns main element
   const ingredientsDropdown = document.querySelector(".ingredientsDropdown");
   const appliancesDropdown = document.querySelector(".appliancesDropdown");
   const ustensilsDropdown = document.querySelector(".ustensilsDropdown");
 
-  splitArray(ingredients).forEach((array) => {
-    const dropdownCol = document.createElement("div");
-    dropdownCol.classList.add("col-4", "p-0");
-    array.forEach((ingredient) => {
-      let listElt = document.createElement("div");
-      listElt.innerHTML = `<a class="dropdown-item text-white fs-6 fs-md-5" href="#" data-value="${ingredient}" data-category="ingredients">${ingredient}</a>`;
-      dropdownCol.appendChild(listElt);
-    });
-    ingredientsDropdown
-      .querySelector(".dropdown-menu .row")
-      .append(dropdownCol);
-  });
-
-  splitArray(appliances).forEach((array) => {
-    const dropdownCol = document.createElement("div");
-    dropdownCol.classList.add("col-4", "p-0");
-    array.forEach((appliance) => {
-      let listElt = document.createElement("div");
-      listElt.innerHTML = `<a class="dropdown-item text-white fs-6 fs-md-5" href="#" data-value="${appliance}" data-category="appliances">${appliance}</a>`;
-      dropdownCol.appendChild(listElt);
-    });
-    appliancesDropdown.querySelector(".dropdown-menu .row").append(dropdownCol);
-  });
-
-  splitArray(ustensils).forEach((array) => {
-    const dropdownCol = document.createElement("div");
-    dropdownCol.classList.add("col-4", "p-0");
-    array.forEach((ustensil) => {
-      let listElt = document.createElement("div");
-      listElt.innerHTML = `<a class="dropdown-item text-white fs-6 fs-md-5" href="#" data-value="${ustensil}" data-category="ustensils">${ustensil}</a>`;
-      dropdownCol.appendChild(listElt);
-    });
-    ustensilsDropdown.querySelector(".dropdown-menu .row").append(dropdownCol);
-  });
+  makeDropdown(ingredientsDropdown, ingredients);
+  makeDropdown(appliancesDropdown, appliances);
+  makeDropdown(ustensilsDropdown, ustensils);
 }
 
 //Adapt the dropdown width by changing the class list
 const dropdownBtns = document.querySelectorAll(".dropdowns .dropdown-toggle");
 dropdownBtns.forEach((btn) => {
   btn.addEventListener("click", function () {
+    const numOfList = btn.parentNode.parentNode.querySelectorAll(
+      ".dropdown-menu .row div.p-0"
+    ).length;
+    console.log(numOfList);
     if (this.classList.contains("show")) {
       this.parentNode.parentNode.classList.remove("col-lg-2", "col-sm-4");
-      this.parentNode.parentNode.classList.add("col-lg-6");
+      if (numOfList === 3) this.parentNode.parentNode.classList.add("col-lg-6");
+      else if (numOfList === 2)
+        this.parentNode.parentNode.classList.add("col-lg-4");
       this.parentNode
         .querySelector("input.form-control")
         .classList.add("rounded-top");
     } else {
       this.parentNode.parentNode.classList.add("col-lg-2", "col-sm-4");
-      this.parentNode.parentNode.classList.remove("col-lg-6");
+      if (numOfList === 3)
+        this.parentNode.parentNode.classList.remove("col-lg-6");
+      else if (numOfList === 2)
+        this.parentNode.parentNode.classList.remove("col-lg-4");
       this.parentNode
         .querySelector("input.form-control")
         .classList.remove("rounded-top");
@@ -244,7 +179,7 @@ dropdownBtns.forEach((btn) => {
   });
 });
 
-document.body.addEventListener("click", (e) => {
+/* document.body.addEventListener("click", (e) => {
   document
     .querySelectorAll(".dropdowns .dropdown-toggle")
     .forEach(function (btn) {
@@ -252,20 +187,20 @@ document.body.addEventListener("click", (e) => {
         !e.target.classList.contains("dropdown-toggle") &&
         btn.classList.contains("show")
       ) {
-        btn.parentNode.parentNode.classList.remove("col-lg-2");
-        btn.parentNode.parentNode.classList.add("col-lg-6");
+        btn.parentNode.parentNode.classList.remove("col-2");
+        btn.parentNode.parentNode.classList.add("col-6");
         this.parentNode
           .querySelector("input.form-control")
           .classList.add("rounded-top");
       } else {
-        btn.parentNode.parentNode.classList.add("col-lg-2");
-        btn.parentNode.parentNode.classList.remove("col-lg-6");
+        btn.parentNode.parentNode.classList.add("col-2");
+        btn.parentNode.parentNode.classList.remove("col-6");
         this.parentNode
           .querySelector("input.form-control")
           .classList.remove("rounded-top");
       }
     });
-});
+}); */
 
 /* main input listener, check if the user type 3 characters and print them it the console */
 const searchInput = document.querySelector("#main-search");
