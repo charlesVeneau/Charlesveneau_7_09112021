@@ -21,12 +21,15 @@ $grey: #e7e7e7;
 .tags {
   .btn-primary {
     background-color: $primary !important;
+    border-color: $primary !important;
   }
   .btn-success {
     background-color: $success !important;
+    border-color: $success !important;
   }
   .btn-danger {
     background-color: $danger !important;
+    border-color: $danger !important;
   }
 }
 .dropdowns {

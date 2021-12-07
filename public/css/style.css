@@ -12,12 +12,15 @@
 
 .tags .btn-primary {
   background-color: #3282f7 !important;
+  border-color: #3282f7 !important;
 }
 .tags .btn-success {
   background-color: #68d9a4 !important;
+  border-color: #68d9a4 !important;
 }
 .tags .btn-danger {
   background-color: #ed6454 !important;
+  border-color: #ed6454 !important;
 }
 
 .dropdowns .bg-primary {
