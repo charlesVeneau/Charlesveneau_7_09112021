@@ -117,9 +117,9 @@ function getDropdowns(recipes) {
           break;
       }
       tagSection.appendChild(tag);
-      // tag.querySelector(".fa-times-circle").addEventListener("click", (e) => {
-      //   tagSection.removeChild(tag);
-      // });
+      tag.querySelector(".fa-times-circle").addEventListener("click", (e) => {
+        tagSection.removeChild(tag);
+      });
     });
   });
 }
@@ -169,9 +169,9 @@ function makeDropdowns(ingredients, appliances, ustensils) {
   const appliancesDropdown = document.querySelector(".appliancesDropdown");
   const ustensilsDropdown = document.querySelector(".ustensilsDropdown");
 
-  makeDropdown(ingredientsDropdown, ingredients);
-  makeDropdown(appliancesDropdown, appliances);
-  makeDropdown(ustensilsDropdown, ustensils);
+  makeDropdown(ingredientsDropdown, ingredients, "ingredients");
+  makeDropdown(appliancesDropdown, appliances, "appliances");
+  makeDropdown(ustensilsDropdown, ustensils, "ustensils");
 }
 
 //Adapt the dropdown width by changing the class list

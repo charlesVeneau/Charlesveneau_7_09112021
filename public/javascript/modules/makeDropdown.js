@@ -1,4 +1,4 @@
-const makeDropdown = (domElement, list) => {
+const makeDropdown = (domElement, list, listName) => {
   splitArray(list).forEach((array) => {
     const dropdownCol = document.createElement("div");
     if (splitArray(list).length === 3) {
@@ -8,7 +8,7 @@ const makeDropdown = (domElement, list) => {
     } else dropdownCol.classList.add("col-12", "p-0");
     array.forEach((element) => {
       let listElt = document.createElement("div");
-      listElt.innerHTML = `<a class="dropdown-item text-white fs-6 fs-md-5" href="#" data-value="${element}">${element}</a>`;
+      listElt.innerHTML = `<a class="dropdown-item text-white fs-6 fs-md-5" href="#" data-value="${element}" data-category="${listName}">${element}</a>`;
       dropdownCol.appendChild(listElt);
     });
     domElement.querySelector(".dropdown-menu .row").append(dropdownCol);
