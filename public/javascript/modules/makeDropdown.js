@@ -1,5 +1,4 @@
 const makeDropdown = (domElement, list) => {
-  console.log(splitArray(list).length);
   splitArray(list).forEach((array) => {
     const dropdownCol = document.createElement("div");
     if (splitArray(list).length === 3) {

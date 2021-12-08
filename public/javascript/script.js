@@ -89,6 +89,39 @@ function getDropdowns(recipes) {
   getNecessary(recipes);
   //go all through all array entries and push everyone into the dropdown list
   makeDropdowns(ingredients, appliances, ustensils);
+
+  const dropdownItems = document.querySelectorAll(".dropdown-item");
+
+  dropdownItems.forEach((item) => {
+    item.addEventListener("click", (e) => {
+      const tagSection = document.querySelector(".row.tags");
+      const tag = document.createElement("div");
+      tag.classList.add("col-auto");
+      switch (item.getAttribute("data-category")) {
+        case "ingredients":
+          tag.innerHTML = `<button class="btn btn-primary text-capitalize" type="button">
+                ${item.innerText} <i class="far fa-times-circle" aria-hidden="true"></i>
+              </button>`;
+          break;
+        case "appliances":
+          tag.innerHTML = `<button class="btn btn-success text-capitalize" type="button">
+                      ${item.innerText} <i class="far fa-times-circle" aria-hidden="true"></i>
+                    </button>`;
+          break;
+        case "ustensils":
+          tag.innerHTML = `<button class="btn btn-danger text-capitalize" type="button">
+                          ${item.innerText} <i class="far fa-times-circle" aria-hidden="true"></i>
+                        </button>`;
+          break;
+        default:
+          break;
+      }
+      tagSection.appendChild(tag);
+      // tag.querySelector(".fa-times-circle").addEventListener("click", (e) => {
+      //   tagSection.removeChild(tag);
+      // });
+    });
+  });
 }
 
 function getNecessary(recipes) {
@@ -148,7 +181,6 @@ dropdownBtns.forEach((btn) => {
     const numOfList = btn.parentNode.parentNode.querySelectorAll(
       ".dropdown-menu .row div.p-0"
     ).length;
-    console.log(numOfList);
     if (this.classList.contains("show")) {
       this.parentNode.parentNode.classList.remove("col-lg-2", "col-sm-4");
       if (numOfList === 3) this.parentNode.parentNode.classList.add("col-lg-6");
