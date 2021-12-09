@@ -174,41 +174,56 @@ function makeDropdowns(ingredients, appliances, ustensils) {
   makeDropdown(ustensilsDropdown, ustensils, "ustensils");
 }
 
-//Adapt the dropdown width by changing the class list
-const dropdownBtns = document.querySelectorAll(".dropdowns .dropdown-toggle");
-dropdownBtns.forEach((btn) => {
-  btn.addEventListener("click", function () {
+function dropDownsListener(dropdownBtns) {
+  dropdownBtns.forEach((btn) => {
     const numOfList = btn.parentNode.parentNode.querySelectorAll(
       ".dropdown-menu .row div.p-0"
     ).length;
-    if (this.classList.contains("show")) {
-      this.parentNode.parentNode.classList.remove("col-lg-2", "col-sm-4");
-      if (numOfList === 3) this.parentNode.parentNode.classList.add("col-lg-6");
+    if (
+      btn.classList.contains("show") /* || btn.getAttribute("aria-expanded")*/
+    ) {
+      btn.parentNode.parentNode.classList.remove("col-lg-2", "col-sm-4");
+      if (numOfList === 3) btn.parentNode.parentNode.classList.add("col-lg-6");
       else if (numOfList === 2)
-        this.parentNode.parentNode.classList.add("col-lg-4");
-      this.parentNode
+        btn.parentNode.parentNode.classList.add("col-lg-4");
+      btn.parentNode
         .querySelector("input.form-control")
         .classList.add("rounded-top");
     } else {
-      this.parentNode.parentNode.classList.add("col-lg-2", "col-sm-4");
+      btn.parentNode.parentNode.classList.add("col-lg-2", "col-sm-4");
       if (numOfList === 3)
-        this.parentNode.parentNode.classList.remove("col-lg-6");
+        btn.parentNode.parentNode.classList.remove("col-lg-6");
       else if (numOfList === 2)
-        this.parentNode.parentNode.classList.remove("col-lg-4");
-      this.parentNode
+        btn.parentNode.parentNode.classList.remove("col-lg-4");
+      btn.parentNode
         .querySelector("input.form-control")
         .classList.remove("rounded-top");
     }
-    /* dropdownBtns.forEach((btn) => {
-      if (btn != this && btn.classList.contains("show")) {
-        this.parentNode.parentNode.classList.add("col-2");
-        this.parentNode.parentNode.classList.remove("col-6");
-        this.parentNode
-          .querySelector("input.form-control")
-          .classList.remove("rounded-top");
-      }
-    }); */
   });
+}
+
+const dropdownBtns = document.querySelectorAll(".dropdowns .dropdown-toggle");
+
+const mutationCallback = (mutationList) => {
+  for (const mutation of mutationList) {
+    if (
+      mutation.type == "attributes" ||
+      mutation.attributeName == "aria-expanded"
+    ) {
+      dropDownsListener(dropdownBtns);
+      console.log("target", mutation.target);
+      console.log("new:", mutation.target.getAttribute("aria-expanded"));
+    }
+  }
+};
+
+const observer = new MutationObserver(mutationCallback);
+
+//Adapt the dropdown width by changing the class list
+
+dropdownBtns.forEach((btn) => {
+  // btn.addEventListener("click", dropDownsListener);
+  observer.observe(btn, { attributeFilter: ["aria-expanded"] });
 });
 
 /* document.body.addEventListener("click", (e) => {

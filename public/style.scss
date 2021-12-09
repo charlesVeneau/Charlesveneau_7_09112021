@@ -84,3 +84,17 @@ $grey: #e7e7e7;
     }
   }
 }
+
+.dropdowns {
+  .dropdown-toggle {
+    &::after {
+      content: url("../img/chevron.svg");
+      border: none;
+    }
+    &.show {
+      &::after {
+        transform: rotate(180deg);
+      }
+    }
+  }
+}

@@ -58,4 +58,12 @@
 }
 .dropdowns .btn.show {
   border-bottom-right-radius: 0 !important;
+}
+
+.dropdowns .dropdown-toggle::after {
+  content: url("../img/chevron.svg");
+  border: none;
+}
+.dropdowns .dropdown-toggle.show::after {
+  transform: rotate(180deg);
 }/*# sourceMappingURL=style.css.map */
