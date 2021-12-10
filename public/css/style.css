@@ -66,4 +66,8 @@
 }
 .dropdowns .dropdown-toggle.show::after {
   transform: rotate(180deg);
+}
+
+.isHidden {
+  display: none;
 }/*# sourceMappingURL=style.css.map */

@@ -186,6 +186,7 @@ function dropDownsListener(dropdownBtns) {
       if (numOfList === 3) btn.parentNode.parentNode.classList.add("col-lg-6");
       else if (numOfList === 2)
         btn.parentNode.parentNode.classList.add("col-lg-4");
+      else btn.parentNode.parentNode.classList.add("col-lg-3");
       btn.parentNode
         .querySelector("input.form-control")
         .classList.add("rounded-top");
@@ -211,8 +212,6 @@ const mutationCallback = (mutationList) => {
       mutation.attributeName == "aria-expanded"
     ) {
       dropDownsListener(dropdownBtns);
-      console.log("target", mutation.target);
-      console.log("new:", mutation.target.getAttribute("aria-expanded"));
     }
   }
 };
@@ -220,34 +219,9 @@ const mutationCallback = (mutationList) => {
 const observer = new MutationObserver(mutationCallback);
 
 //Adapt the dropdown width by changing the class list
-
 dropdownBtns.forEach((btn) => {
-  // btn.addEventListener("click", dropDownsListener);
   observer.observe(btn, { attributeFilter: ["aria-expanded"] });
 });
-
-/* document.body.addEventListener("click", (e) => {
-  document
-    .querySelectorAll(".dropdowns .dropdown-toggle")
-    .forEach(function (btn) {
-      if (
-        !e.target.classList.contains("dropdown-toggle") &&
-        btn.classList.contains("show")
-      ) {
-        btn.parentNode.parentNode.classList.remove("col-2");
-        btn.parentNode.parentNode.classList.add("col-6");
-        this.parentNode
-          .querySelector("input.form-control")
-          .classList.add("rounded-top");
-      } else {
-        btn.parentNode.parentNode.classList.add("col-2");
-        btn.parentNode.parentNode.classList.remove("col-6");
-        this.parentNode
-          .querySelector("input.form-control")
-          .classList.remove("rounded-top");
-      }
-    });
-}); */
 
 /* main input listener, check if the user type 3 characters and print them it the console */
 const searchInput = document.querySelector("#main-search");
@@ -258,4 +232,26 @@ searchInput.addEventListener("keyup", (e) => {
     mainInput = e.target.value;
     // console.log(mainInput);
   }
+});
+
+function filterDropdown(e) {
+  const tagSearch = e.target;
+  const listName = tagSearch.getAttribute("data-listitems");
+  const tagsList =
+    tagSearch.getAttribute("data-listitems") == "ingredients"
+      ? ingredients
+      : tagSearch.getAttribute("data-listitems") === "appliances"
+      ? appliances
+      : ustensils;
+  const tagsListFiltered = tagsList.filter((tag) =>
+    tag.includes(tagSearch.value)
+  );
+  console.log(tagsListFiltered);
+  makeDropdown(tagSearch.parentNode.parentNode, tagsListFiltered, listName);
+}
+
+//dropdown input listener
+const dropdownInputs = document.querySelectorAll(".dropdowns .form-control");
+dropdownInputs.forEach((input) => {
+  input.addEventListener("keyup", filterDropdown);
 });

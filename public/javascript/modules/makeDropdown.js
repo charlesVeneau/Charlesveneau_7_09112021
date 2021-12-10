@@ -1,4 +1,6 @@
 const makeDropdown = (domElement, list, listName) => {
+  console.log(list);
+  domElement.querySelector(".dropdown-menu .row").innerHTML = "";
   splitArray(list).forEach((array) => {
     const dropdownCol = document.createElement("div");
     if (splitArray(list).length === 3) {
@@ -16,20 +18,27 @@ const makeDropdown = (domElement, list, listName) => {
 };
 
 function splitArray(array) {
-  const TempArray = array.slice(0, 30);
+  // const TempArray = array.slice(0, 30);
   let mainArray = [];
-  if (TempArray.length > 20) {
+  if (array.length > 30)
     return (mainArray = [
-      TempArray.slice(0, 10),
-      TempArray.slice(10, 20),
-      TempArray.slice(20, 30),
+      array.slice(0, 10),
+      array.slice(10, 20),
+      array.slice(20, 30),
+      array.slice(30),
+    ]);
+  if (array.lenght > 20 && array.length <= 30) {
+    return (mainArray = [
+      array.slice(0, 10),
+      array.slice(10, 20),
+      array.slice(20, 30),
     ]);
   }
-  if (TempArray.length > 10 && TempArray.length <= 20) {
-    return (mainArray = [TempArray.slice(0, 10), TempArray.slice(10, 20)]);
+  if (array.length > 10 && array.length <= 20) {
+    return (mainArray = [array.slice(0, 10), array.slice(10, 20)]);
   }
-  if (TempArray.length <= 10) {
-    return (mainArray = [TempArray.slice(0, 10)]);
+  if (array.length <= 10) {
+    return (mainArray = [array.slice(0, 10)]);
   }
 }
 
