@@ -17,6 +17,7 @@ const makeDropdown = (domElement, list, listName) => {
     });
     domElement.querySelector(".dropdown-menu .row").append(dropdownCol);
   });
+  dropdownItemListener(domElement);
 };
 
 function splitArray(array) {
@@ -42,6 +43,41 @@ function splitArray(array) {
   if (array.length <= 10) {
     return (mainArray = [array.slice(0, 10)]);
   }
+}
+
+function dropdownItemListener(domElement) {
+  const dropdownItems = domElement.querySelectorAll(".dropdown-item");
+
+  dropdownItems.forEach((item) => {
+    item.addEventListener("click", (e) => {
+      const tagSection = document.querySelector(".row.tags");
+      const tag = document.createElement("div");
+      tag.classList.add("col-auto");
+      switch (item.getAttribute("data-category")) {
+        case "ingredients":
+          tag.innerHTML = `<button class="btn btn-primary text-capitalize" type="button">
+                  ${item.innerText} <i class="far fa-times-circle" aria-hidden="true"></i>
+                </button>`;
+          break;
+        case "appliances":
+          tag.innerHTML = `<button class="btn btn-success text-capitalize" type="button">
+                        ${item.innerText} <i class="far fa-times-circle" aria-hidden="true"></i>
+                      </button>`;
+          break;
+        case "ustensils":
+          tag.innerHTML = `<button class="btn btn-danger text-capitalize" type="button">
+                            ${item.innerText} <i class="far fa-times-circle" aria-hidden="true"></i>
+                          </button>`;
+          break;
+        default:
+          break;
+      }
+      tagSection.appendChild(tag);
+      tag.querySelector(".fa-times-circle").addEventListener("click", (e) => {
+        tagSection.removeChild(tag);
+      });
+    });
+  });
 }
 
 export { makeDropdown };
