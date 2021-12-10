@@ -183,7 +183,7 @@ function dropDownsListener(dropdownBtns) {
       btn.classList.contains("show") /* || btn.getAttribute("aria-expanded")*/
     ) {
       btn.parentNode.parentNode.classList.remove("col-lg-2", "col-sm-4");
-      if (numOfList === 3) btn.parentNode.parentNode.classList.add("col-lg-6");
+      if (numOfList >= 3) btn.parentNode.parentNode.classList.add("col-lg-6");
       else if (numOfList === 2)
         btn.parentNode.parentNode.classList.add("col-lg-4");
       else btn.parentNode.parentNode.classList.add("col-lg-3");
@@ -192,10 +192,11 @@ function dropDownsListener(dropdownBtns) {
         .classList.add("rounded-top");
     } else {
       btn.parentNode.parentNode.classList.add("col-lg-2", "col-sm-4");
-      if (numOfList === 3)
+      if (numOfList >= 3)
         btn.parentNode.parentNode.classList.remove("col-lg-6");
       else if (numOfList === 2)
         btn.parentNode.parentNode.classList.remove("col-lg-4");
+      else btn.parentNode.parentNode.classList.remove("col-lg-3");
       btn.parentNode
         .querySelector("input.form-control")
         .classList.remove("rounded-top");
