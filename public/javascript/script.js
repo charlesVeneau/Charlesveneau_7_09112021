@@ -59,7 +59,7 @@ function createGallery(recipes) {
     recipe.ingredients.forEach((ingredient) => {
       const element = document.createElement("p");
       element.classList.add("card-text", "text-small", "mb-0");
-      element.setAttribute("data-ingredient", ingredient);
+      element.setAttribute("data-ingredient", ingredient.ingredient);
       element.innerHTML = `<strong>${
         ingredient.ingredient
       }:</strong> ${getUnits(ingredient)}`;
