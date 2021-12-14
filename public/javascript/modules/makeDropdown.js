@@ -1,4 +1,4 @@
-const makeDropdown = (domElement, list, listName) => {
+const makeDropdown = (domElement, list, listName, recipes) => {
   domElement.querySelector(".dropdown-menu .row").innerHTML = "";
   splitArray(list).forEach((array, index) => {
     const dropdownCol = document.createElement("div");
@@ -17,7 +17,7 @@ const makeDropdown = (domElement, list, listName) => {
     });
     domElement.querySelector(".dropdown-menu .row").append(dropdownCol);
   });
-  dropdownItemListener(domElement);
+  dropdownItemListener(domElement, recipes);
 };
 
 function splitArray(array) {
@@ -45,8 +45,11 @@ function splitArray(array) {
   }
 }
 
-function dropdownItemListener(domElement) {
+function dropdownItemListener(domElement, recipes) {
   const dropdownItems = domElement.querySelectorAll(".dropdown-item");
+  const displayedRecipes = Array.from(
+    document.querySelectorAll(".cardsGallery__card")
+  );
 
   dropdownItems.forEach((item) => {
     item.addEventListener("click", (e) => {
@@ -76,8 +79,40 @@ function dropdownItemListener(domElement) {
       tag.querySelector(".fa-times-circle").addEventListener("click", (e) => {
         tagSection.removeChild(tag);
       });
+      //data-value data-ingredient
+      const itemValue = item.getAttribute("data-value");
+      const itemCategory = item.getAttribute("data-category");
+      // console.log(itemCategory);
+      // console.log(recipes);
+      const filteredRecipes = recipes
+        .filter((recipe) => {
+          if (itemCategory == "ingredients") {
+            recipe.ingredients.forEach((ingredient) => {
+              return ingredient.ingredient.toLowerCase() == itemValue;
+            });
+          } else if (itemCategory == "appliances") {
+            return recipe.appliance.toLowerCase() == itemValue;
+          } else if (itemCategory == "ustensils") {
+            console.log(recipe.ustensils);
+            recipe.ustensils
+              .map((ustensil) => ustensil.toLowerCase())
+              .includes(itemValue);
+          }
+        })
+        .map((recipe) => recipe.id);
+      console.log(filteredRecipes);
+      displayedRecipes.forEach((recipe) => {
+        if (!filteredRecipes.includes(parseInt(recipe.getAttribute("data-id"))))
+          recipe.classList.add("isHidden");
+      });
+      // console.log(filteredRecipes);
     });
   });
 }
 
 export { makeDropdown };
+
+/*Au clic sur un tag, il est ajouté dans la section correspondante
+faire un tableau des recettes correspondant aux recettes affichées. puis faire un tableau contenant l'id des recettes contenant le tag
+ce tableau sert d'element de comparaison pour afficher ou cacher la recette
+*/

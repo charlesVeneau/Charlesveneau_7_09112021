@@ -1,10 +1,11 @@
 // import { createGallery } from "./modules/createGallery.js";
-import { makeDropdown } from "./modules/makeDropdown.js";
+// import { makeDropdown } from "./modules/makeDropdown.js";
 
 let recipes;
 let ingredients = [];
 let appliances = [];
 let ustensils = [];
+const dropdownBtns = document.querySelectorAll(".dropdowns .dropdown-toggle");
 
 let fetchData = async () => {
   let response = await fetch("assets/db.json");
@@ -69,6 +70,7 @@ function createGallery(recipes) {
   });
 }
 
+//need a function to truncate the recipes description in order to create a preview
 function truncateString(str, num) {
   //return the string if it's less or equal to the num
   if (str.length <= num) return str;
@@ -76,19 +78,19 @@ function truncateString(str, num) {
   return `${str.slice(0, num)}...`;
 }
 
+//In order to display the correct unit and quantity for the ingredients I check if the information is available
 function getUnits(ingredient) {
   if (ingredient.quantity) {
     if (ingredient.unit) return `${ingredient.quantity}${ingredient.unit}`;
     return `${ingredient.quantity}`;
-  } else {
-    return ``;
   }
+  return ``;
 }
 
 function getDropdowns(recipes) {
   getNecessary(recipes);
   //go all through all array entries and push everyone into the dropdown list
-  makeDropdowns(ingredients, appliances, ustensils);
+  makeDropdowns(ingredients, appliances, ustensils, recipes);
 }
 
 function getNecessary(recipes) {
@@ -120,16 +122,6 @@ function getNecessary(recipes) {
   });
 }
 
-function cleanAndSort(array) {
-  array.sort((a, b) => (a < b ? -1 : 1));
-  let temp = array;
-  array = temp.filter((v, i) => {
-    return temp.indexOf(v) == i;
-  });
-  /*   console.log(array);
-  return array; */
-}
-
 function makeDropdowns(ingredients, appliances, ustensils) {
   //select all 3 dropdowns main element
   const ingredientsDropdown = document.querySelector(".ingredientsDropdown");
@@ -141,6 +133,7 @@ function makeDropdowns(ingredients, appliances, ustensils) {
   makeDropdown(ustensilsDropdown, ustensils, "ustensils");
 }
 
+//Function that will be trigger when the elements have a attributes mutation in order to display the lists properly
 function dropDownsListener(dropdownBtns) {
   dropdownBtns.forEach((btn) => {
     const numOfList = btn.parentNode.parentNode.querySelectorAll(
@@ -171,8 +164,6 @@ function dropDownsListener(dropdownBtns) {
   });
 }
 
-const dropdownBtns = document.querySelectorAll(".dropdowns .dropdown-toggle");
-
 const mutationCallback = (mutationList) => {
   for (const mutation of mutationList) {
     if (
@@ -185,6 +176,91 @@ const mutationCallback = (mutationList) => {
 };
 
 const observer = new MutationObserver(mutationCallback);
+
+const makeDropdown = (domElement, list, listName, recipes) => {
+  domElement.querySelector(".dropdown-menu .row").innerHTML = "";
+  splitArray(list).forEach((array, index) => {
+    const dropdownCol = document.createElement("div");
+    if (splitArray(list).length >= 3) {
+      dropdownCol.classList.add("col-4", "p-0");
+    } else if (splitArray(list).length === 2) {
+      dropdownCol.classList.add("col-6", "p-0");
+    } else dropdownCol.classList.add("col-12", "p-0");
+    array.forEach((element) => {
+      let listElt = document.createElement("div");
+      if (index >= 3)
+        listElt.innerHTML = `<a class="dropdown-item text-white fs-6 fs-md-5 isHidden" href="#" data-value="${element}" data-category="${listName}">${element}</a>`;
+      else
+        listElt.innerHTML = `<a class="dropdown-item text-white fs-6 fs-md-5" href="#" data-value="${element}" data-category="${listName}">${element}</a>`;
+      dropdownCol.appendChild(listElt);
+    });
+    domElement.querySelector(".dropdown-menu .row").append(dropdownCol);
+  });
+  dropdownItemListener(domElement);
+};
+
+function splitArray(array) {
+  // const TempArray = array.slice(0, 30);
+  let mainArray = [];
+  if (array.length > 30)
+    return (mainArray = [
+      array.slice(0, 10),
+      array.slice(10, 20),
+      array.slice(20, 30),
+      array.slice(30),
+    ]);
+  if (array.length > 20 && array.length <= 30) {
+    return (mainArray = [
+      array.slice(0, 10),
+      array.slice(10, 20),
+      array.slice(20, 30),
+    ]);
+  }
+  if (array.length > 10 && array.length <= 20) {
+    return (mainArray = [array.slice(0, 10), array.slice(10, 20)]);
+  }
+  if (array.length <= 10) {
+    return (mainArray = [array.slice(0, 10)]);
+  }
+}
+
+function dropdownItemListener(domElement) {
+  const dropdownItems = domElement.querySelectorAll(".dropdown-item");
+  const displayedRecipes = Array.from(
+    document.querySelectorAll(".cardsGallery__card")
+  );
+
+  dropdownItems.forEach((item) => {
+    item.addEventListener("click", (e) => {
+      const tagSection = document.querySelector(".row.tags");
+      const tag = document.createElement("div");
+      tag.classList.add("col-auto");
+      switch (item.getAttribute("data-category")) {
+        case "ingredients":
+          tag.innerHTML = `<button class="btn btn-primary text-capitalize" type="button">
+                  ${item.innerText} <i class="far fa-times-circle" aria-hidden="true"></i>
+                </button>`;
+          break;
+        case "appliances":
+          tag.innerHTML = `<button class="btn btn-success text-capitalize" type="button">
+                        ${item.innerText} <i class="far fa-times-circle" aria-hidden="true"></i>
+                      </button>`;
+          break;
+        case "ustensils":
+          tag.innerHTML = `<button class="btn btn-danger text-capitalize" type="button">
+                            ${item.innerText} <i class="far fa-times-circle" aria-hidden="true"></i>
+                          </button>`;
+          break;
+        default:
+          break;
+      }
+      tagSection.appendChild(tag);
+      tag.querySelector(".fa-times-circle").addEventListener("click", (e) => {
+        tagSection.removeChild(tag);
+      });
+    });
+  });
+}
 
 //Adapt the dropdown width by changing the class list
 dropdownBtns.forEach((btn) => {
@@ -204,17 +280,16 @@ searchInput.addEventListener("keyup", (e) => {
 
 function filterDropdown(e) {
   const tagSearch = e.target;
-  const listName = tagSearch.getAttribute("data-listitems");
+  const listName = tagSearch.getAttribute("data-category");
   const tagsList =
-    tagSearch.getAttribute("data-listitems") == "ingredients"
+    listName == "ingredients"
       ? ingredients
-      : tagSearch.getAttribute("data-listitems") === "appliances"
+      : listName === "appliances"
       ? appliances
       : ustensils;
   const tagsListFiltered = tagsList.filter((tag) =>
     tag.includes(tagSearch.value)
   );
-  console.log(tagsListFiltered);
   makeDropdown(tagSearch.parentNode.parentNode, tagsListFiltered, listName);
 }
 
