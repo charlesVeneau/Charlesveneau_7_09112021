@@ -5,6 +5,7 @@ let recipes;
 let ingredients = [];
 let appliances = [];
 let ustensils = [];
+let filteredRecipes = [];
 const dropdownBtns = document.querySelectorAll(".dropdowns .dropdown-toggle");
 
 let fetchData = async () => {
@@ -273,8 +274,9 @@ let mainInput = "";
 
 searchInput.addEventListener("keyup", (e) => {
   if (e.target.value.length >= 3) {
-    mainInput = e.target.value;
+    mainInput = e.target.value.trim();
     // console.log(mainInput);
+    searchRecipes(mainInput);
   }
 });
 
@@ -298,3 +300,18 @@ const dropdownInputs = document.querySelectorAll(".dropdowns .form-control");
 dropdownInputs.forEach((input) => {
   input.addEventListener("keyup", filterDropdown);
 });
+
+function searchRecipes(value) {
+  console.log(value);
+  filteredRecipes = recipes.filter((recipe) => {
+    if (
+      recipe.description.toLowerCase().includes(value) ||
+      recipe.name.toLowerCase().includes(value) ||
+      recipe.ingredients.filter((ingredient) =>
+        ingredient.ingredient.toLowerCase().includes(value)
+      )
+    )
+      return true;
+  });
+  console.log(filteredRecipes);
+}
