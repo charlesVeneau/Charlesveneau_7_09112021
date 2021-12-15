@@ -28,6 +28,7 @@ fetchData()
 
 function createGallery(recipes) {
   const gallery = document.querySelector(".cardsGallery");
+  gallery.innerHTML = "";
   recipes.forEach((recipe) => {
     const article = document.createElement("article");
     article.classList.add("col", "cardsGallery__card", "mt-0", "mb-5");
@@ -96,6 +97,9 @@ function getDropdowns(recipes) {
 
 function getNecessary(recipes) {
   //retrive in all the recipes, the appliances ustensils and ingredients
+  appliances.length = 0;
+  ustensils.length = 0;
+  ingredients.lenght = 0;
   recipes.forEach((recipe) => {
     appliances.push(recipe.appliance.toLowerCase());
     recipe.ustensils.forEach((ustensil) => {
@@ -302,16 +306,30 @@ dropdownInputs.forEach((input) => {
 });
 
 function searchRecipes(value) {
-  console.log(value);
   filteredRecipes = recipes.filter((recipe) => {
+    if (recipe.name.toLowerCase().includes(value)) return true;
+    if (recipe.description.toLowerCase().includes(value)) return true;
     if (
-      recipe.description.toLowerCase().includes(value) ||
-      recipe.name.toLowerCase().includes(value) ||
-      recipe.ingredients.filter((ingredient) =>
+      recipe.ingredients.find((ingredient) =>
         ingredient.ingredient.toLowerCase().includes(value)
       )
     )
       return true;
   });
-  console.log(filteredRecipes);
+  if (filteredRecipes.length > 0) {
+    createGallery(filteredRecipes);
+    getDropdowns(filteredRecipes);
+  } else {
+    errorMessage();
+  }
+}
+
+function errorMessage() {
+  const gallery = document.querySelector(".cardsGallery");
+  gallery.innerHTML = "";
+  const message = document.createElement("p");
+  message.classList.add("col-8", "justify-content-center");
+  message.innerText = ` Aucune recette ne correspond à votre critère… vous pouvez chercher « tarte aux pommes », « poisson », etc.`;
+
+  gallery.appendChild(message);
 }
