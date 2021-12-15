@@ -99,7 +99,7 @@ function getNecessary(recipes) {
   //retrive in all the recipes, the appliances ustensils and ingredients
   appliances.length = 0;
   ustensils.length = 0;
-  ingredients.lenght = 0;
+  ingredients.length = 0;
   recipes.forEach((recipe) => {
     appliances.push(recipe.appliance.toLowerCase());
     recipe.ustensils.forEach((ustensil) => {
