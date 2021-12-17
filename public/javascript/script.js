@@ -6,6 +6,8 @@ let ingredients = [];
 let appliances = [];
 let ustensils = [];
 let filteredRecipes = [];
+let selectedTags = { ingredients: [], appliances: [], ustensils: [] };
+
 const dropdownBtns = document.querySelectorAll(".dropdowns .dropdown-toggle");
 
 let fetchData = async () => {
@@ -28,6 +30,8 @@ fetchData()
 
 function createGallery(recipes) {
   const gallery = document.querySelector(".cardsGallery");
+  if (gallery.classList.contains("justify-content-center"))
+    gallery.classList.remove("justify-content-center");
   gallery.innerHTML = "";
   recipes.forEach((recipe) => {
     const article = document.createElement("article");
@@ -245,16 +249,19 @@ function dropdownItemListener(domElement) {
           tag.innerHTML = `<button class="btn btn-primary text-capitalize" type="button">
                   ${item.innerText} <i class="far fa-times-circle" aria-hidden="true"></i>
                 </button>`;
+          selectedTags.ingredients.push(item.innerText.toLowerCase());
           break;
         case "appliances":
           tag.innerHTML = `<button class="btn btn-success text-capitalize" type="button">
                         ${item.innerText} <i class="far fa-times-circle" aria-hidden="true"></i>
                       </button>`;
+          selectedTags.appliances.push(item.innerText.toLowerCase());
           break;
         case "ustensils":
           tag.innerHTML = `<button class="btn btn-danger text-capitalize" type="button">
                             ${item.innerText} <i class="far fa-times-circle" aria-hidden="true"></i>
                           </button>`;
+          selectedTags.ustensils.push(item.innerText.toLowerCase());
           break;
         default:
           break;
@@ -262,9 +269,46 @@ function dropdownItemListener(domElement) {
       tagSection.appendChild(tag);
       tag.querySelector(".fa-times-circle").addEventListener("click", (e) => {
         tagSection.removeChild(tag);
+        removeTag(item);
       });
+      if (filteredRecipes.length > 0) {
+        filterTags(filteredRecipes, item);
+      } else {
+        filterTags(recipes, item);
+      }
     });
   });
+}
+
+//Remove the tag from the selectedTags in order to display the correct searchRecipes
+function removeTag(item) {
+  let TempArray;
+  switch (item.getAttribute("data-category")) {
+    case "ingredients":
+      TempArray = selectedTags.ingredients;
+      selectedTags.ingredients = TempArray.filter(
+        (ingredient) => ingredient != item.innerText.toLowerCase()
+      );
+
+      break;
+    case "appliances":
+      TempArray = selectedTags.appliances;
+      selectedTags.appliances = TempArray.filter(
+        (appliances) => appliances != item.innerText.toLowerCase()
+      );
+      break;
+    case "ustensils":
+      TempArray = selectedTags.ustensils;
+      selectedTags.ustensils = TempArray.filter(
+        (ustensil) => ustensil != item.innerText.toLowerCase()
+      );
+      break;
+  }
+  if (filteredRecipes.length > 0) {
+    filterTags(filteredRecipes, item);
+  } else {
+    filterTags(recipes, item);
+  }
 }
 
 //Adapt the dropdown width by changing the class list
@@ -281,6 +325,10 @@ searchInput.addEventListener("keyup", (e) => {
     mainInput = e.target.value.trim();
     // console.log(mainInput);
     searchRecipes(mainInput);
+  } else {
+    createGallery(recipes);
+    getDropdowns(recipes);
+    filteredRecipes.length = 0;
   }
 });
 
@@ -297,6 +345,28 @@ function filterDropdown(e) {
     tag.includes(tagSearch.value)
   );
   makeDropdown(tagSearch.parentNode.parentNode, tagsListFiltered, listName);
+}
+
+//Depending on the clicked item category, we will search for the correspondante recipes inside the display ones
+function filterTags(recipes, item) {
+  filteredRecipes = recipes.filter((recipe) => {
+    if (item.getAttribute("data-category") == "ingredients") {
+      return recipe.ingredients.find((ingredient) =>
+        selectedTags.ingredients.includes(ingredient.ingredient.toLowerCase())
+      );
+    }
+    if (item.getAttribute("data-category") == "appliances")
+      return selectedTags.appliances.includes(recipe.appliance.toLowerCase());
+
+    if (item.getAttribute("data-category") == "ustensils")
+      return recipe.ustensils.find((ustensil) =>
+        selectedTags.ustensils.includes(ustensil.toLowerCase())
+      );
+  });
+  if (filteredRecipes.length > 0) {
+    createGallery(filteredRecipes);
+    getDropdowns(filteredRecipes);
+  } else errorMessage();
 }
 
 //dropdown input listener
@@ -327,9 +397,8 @@ function searchRecipes(value) {
 function errorMessage() {
   const gallery = document.querySelector(".cardsGallery");
   gallery.innerHTML = "";
+  gallery.classList.add("justify-content-center");
   const message = document.createElement("p");
-  message.classList.add("col-8", "justify-content-center");
   message.innerText = ` Aucune recette ne correspond à votre critère… vous pouvez chercher « tarte aux pommes », « poisson », etc.`;
-
   gallery.appendChild(message);
 }
