@@ -22,7 +22,7 @@ fetchData()
     recipes = data.recipes;
     createGallery(recipes);
     getDropdowns(recipes);
-    // console.log(recipes);
+    console.log(recipes);
   })
   .catch((err) => {
     console.log(err);
@@ -289,7 +289,6 @@ function removeTag(item) {
       selectedTags.ingredients = TempArray.filter(
         (ingredient) => ingredient != item.innerText.toLowerCase()
       );
-
       break;
     case "appliances":
       TempArray = selectedTags.appliances;
@@ -304,6 +303,7 @@ function removeTag(item) {
       );
       break;
   }
+  console.log(selectedTags);
   if (filteredRecipes.length > 0) {
     filterTags(filteredRecipes, item);
   } else {
@@ -348,19 +348,29 @@ function filterDropdown(e) {
 }
 
 //Depending on the clicked item category, we will search for the correspondante recipes inside the display ones
-function filterTags(recipes, item) {
-  filteredRecipes = recipes.filter((recipe) => {
+function filterTags(recipesList, item) {
+  filteredRecipes = recipesList.filter((recipe) => {
     if (item.getAttribute("data-category") == "ingredients") {
-      return recipe.ingredients.find((ingredient) =>
-        selectedTags.ingredients.includes(ingredient.ingredient.toLowerCase())
+      const ingredientsList = recipe.ingredients.map(
+        (ingredient) => ingredient.ingredient
+      );
+      return selectedTags.ingredients.every((entry) =>
+        ingredientsList.find(
+          (ingredient) => ingredient.toLowerCase() == entry.toLowerCase()
+        )
       );
     }
     if (item.getAttribute("data-category") == "appliances")
       return selectedTags.appliances.includes(recipe.appliance.toLowerCase());
 
     if (item.getAttribute("data-category") == "ustensils")
-      return recipe.ustensils.find((ustensil) =>
-        selectedTags.ustensils.includes(ustensil.toLowerCase())
+      // return recipe.ustensils.find((ustensil) =>
+      //   selectedTags.ustensils.includes(ustensil.toLowerCase())
+      // );
+      return selectedTags.ustensils.every((entry) =>
+        recipe.ustensils.find(
+          (ustensil) => ustensil.toLowerCase() == entry.toLowerCase()
+        )
       );
   });
   if (filteredRecipes.length > 0) {
