@@ -148,9 +148,7 @@ function dropDownsListener(dropdownBtns) {
     const numOfList = btn.parentNode.parentNode.querySelectorAll(
       ".dropdown-menu .row div.p-0"
     ).length;
-    if (
-      btn.classList.contains("show") /* || btn.getAttribute("aria-expanded")*/
-    ) {
+    if (btn.classList.contains("show")) {
       btn.parentNode.parentNode.classList.remove("col-lg-2", "col-sm-4");
       if (numOfList >= 3) btn.parentNode.parentNode.classList.add("col-lg-6");
       else if (numOfList === 2)
@@ -172,19 +170,6 @@ function dropDownsListener(dropdownBtns) {
     }
   });
 }
-
-const mutationCallback = (mutationList) => {
-  for (const mutation of mutationList) {
-    if (
-      mutation.type == "attributes" ||
-      mutation.attributeName == "aria-expanded"
-    ) {
-      dropDownsListener(dropdownBtns);
-    }
-  }
-};
-
-const observer = new MutationObserver(mutationCallback);
 
 const makeDropdown = (domElement, list, listName, recipes) => {
   domElement.querySelector(".dropdown-menu .row").innerHTML = "";
@@ -235,9 +220,9 @@ function splitArray(array) {
 
 function dropdownItemListener(domElement) {
   const dropdownItems = domElement.querySelectorAll(".dropdown-item");
-  const displayedRecipes = Array.from(
-    document.querySelectorAll(".cardsGallery__card")
-  );
+  // const displayedRecipes = Array.from(
+  //   document.querySelectorAll(".cardsGallery__card")
+  // );
 
   dropdownItems.forEach((item) => {
     item.addEventListener("click", (e) => {
@@ -272,9 +257,9 @@ function dropdownItemListener(domElement) {
         removeTag(item);
       });
       if (filteredRecipes.length > 0) {
-        filterTags(filteredRecipes, item);
+        filterTags(filteredRecipes);
       } else {
-        filterTags(recipes, item);
+        filterTags(recipes);
       }
     });
   });
@@ -305,13 +290,26 @@ function removeTag(item) {
   }
   console.log(selectedTags);
   if (filteredRecipes.length > 0) {
-    filterTags(filteredRecipes, item);
+    filterTags(filteredRecipes);
   } else {
-    filterTags(recipes, item);
+    filterTags(recipes);
   }
 }
 
 //Adapt the dropdown width by changing the class list
+const mutationCallback = (mutationList) => {
+  for (const mutation of mutationList) {
+    if (
+      mutation.type == "attributes" ||
+      mutation.attributeName == "aria-expanded"
+    ) {
+      dropDownsListener(dropdownBtns);
+    }
+  }
+};
+
+const observer = new MutationObserver(mutationCallback);
+
 dropdownBtns.forEach((btn) => {
   observer.observe(btn, { attributeFilter: ["aria-expanded"] });
 });
@@ -348,35 +346,42 @@ function filterDropdown(e) {
 }
 
 //Depending on the clicked item category, we will search for the correspondante recipes inside the display ones
-function filterTags(recipesList, item) {
-  filteredRecipes = recipesList.filter((recipe) => {
-    if (item.getAttribute("data-category") == "ingredients") {
-      const ingredientsList = recipe.ingredients.map(
-        (ingredient) => ingredient.ingredient
-      );
-      return selectedTags.ingredients.every((entry) =>
-        ingredientsList.find(
-          (ingredient) => ingredient.toLowerCase() == entry.toLowerCase()
-        )
-      );
+function filterTags(recipesList) {
+  let tempArray = recipesList;
+  console.log(tempArray);
+  Object.entries(selectedTags).forEach((section) => {
+    const [key, array] = section;
+    if (array.length > 0) {
+      if (key == "ingredients") {
+        tempArray = tempArray.filter((recipe) => {
+          const ingredientsList = recipe.ingredients.map(
+            (ingredient) => ingredient.ingredient
+          );
+          return array.every((entry) =>
+            ingredientsList.find(
+              (ingredient) => ingredient.toLowerCase() == entry.toLowerCase()
+            )
+          );
+        });
+        console.log(tempArray);
+      } else if (key == "appliances") {
+        tempArray = tempArray.filter((recipe) =>
+          array.includes(recipe.appliance.toLowerCase())
+        );
+      } else if (key == "ustensils") {
+        tempArray = tempArray.filter((recipe) => {
+          array.every((entry) =>
+            recipe.ustensils.find(
+              (ustensil) => ustensil.toLowerCase() == entry.toLowerCase()
+            )
+          );
+        });
+      }
     }
-    if (item.getAttribute("data-category") == "appliances")
-      return selectedTags.appliances.includes(recipe.appliance.toLowerCase());
-
-    if (item.getAttribute("data-category") == "ustensils")
-      // return recipe.ustensils.find((ustensil) =>
-      //   selectedTags.ustensils.includes(ustensil.toLowerCase())
-      // );
-      return selectedTags.ustensils.every((entry) =>
-        recipe.ustensils.find(
-          (ustensil) => ustensil.toLowerCase() == entry.toLowerCase()
-        )
-      );
   });
-  if (filteredRecipes.length > 0) {
-    createGallery(filteredRecipes);
-    getDropdowns(filteredRecipes);
-  } else errorMessage();
+
+  createGallery(tempArray);
+  getDropdowns(tempArray);
 }
 
 //dropdown input listener
