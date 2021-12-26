@@ -6,13 +6,13 @@ let ingredients = [];
 let appliances = [];
 let ustensils = [];
 let filteredRecipes = [];
-let selectedTags = { ingredients: [], appliances: [], ustensils: [] };
+const selectedTags = { ingredients: [], appliances: [], ustensils: [] };
 
 const dropdownBtns = document.querySelectorAll(".dropdowns .dropdown-toggle");
 
-let fetchData = async () => {
-  let response = await fetch("assets/db.json");
-  let data = await response.json();
+const fetchData = async () => {
+  const response = await fetch("assets/db.json");
+  const data = await response.json();
   return data;
 };
 
@@ -22,7 +22,6 @@ fetchData()
     recipes = data.recipes;
     createGallery(recipes);
     getDropdowns(recipes);
-    console.log(recipes);
   })
   .catch((err) => {
     console.log(err);
@@ -181,7 +180,7 @@ const makeDropdown = (domElement, list, listName, recipes) => {
       dropdownCol.classList.add("col-6", "p-0");
     } else dropdownCol.classList.add("col-12", "p-0");
     array.forEach((element) => {
-      let listElt = document.createElement("div");
+      const listElt = document.createElement("div");
       if (index >= 3)
         listElt.innerHTML = `<a class="dropdown-item text-white fs-6 fs-md-5 isHidden" href="#" data-value="${element}" data-category="${listName}">${element}</a>`;
       else
@@ -220,46 +219,53 @@ function splitArray(array) {
 
 function dropdownItemListener(domElement) {
   const dropdownItems = domElement.querySelectorAll(".dropdown-item");
-  // const displayedRecipes = Array.from(
-  //   document.querySelectorAll(".cardsGallery__card")
-  // );
-
   dropdownItems.forEach((item) => {
     item.addEventListener("click", (e) => {
-      const tagSection = document.querySelector(".row.tags");
-      const tag = document.createElement("div");
-      tag.classList.add("col-auto");
-      switch (item.getAttribute("data-category")) {
-        case "ingredients":
-          tag.innerHTML = `<button class="btn btn-primary text-capitalize" type="button">
+      //Need to see if the item is already in the selected tag list
+      //if the item is in one of the tags list don't do item
+      const itemValue = item.innerText.toLowerCase();
+      let isAlreadyInTagList = false;
+      Object.values(selectedTags).forEach((list) => {
+        if (list.find((elt) => elt === itemValue)) {
+          isAlreadyInTagList = true;
+        }
+      });
+      if (!isAlreadyInTagList) {
+        const tagSection = document.querySelector(".row.tags");
+        const tag = document.createElement("div");
+        tag.classList.add("col-auto");
+        switch (item.getAttribute("data-category")) {
+          case "ingredients":
+            tag.innerHTML = `<button class="btn btn-primary text-capitalize" type="button">
                   ${item.innerText} <i class="far fa-times-circle" aria-hidden="true"></i>
                 </button>`;
-          selectedTags.ingredients.push(item.innerText.toLowerCase());
-          break;
-        case "appliances":
-          tag.innerHTML = `<button class="btn btn-success text-capitalize" type="button">
+            selectedTags.ingredients.push(itemValue);
+            break;
+          case "appliances":
+            tag.innerHTML = `<button class="btn btn-success text-capitalize" type="button">
                         ${item.innerText} <i class="far fa-times-circle" aria-hidden="true"></i>
                       </button>`;
-          selectedTags.appliances.push(item.innerText.toLowerCase());
-          break;
-        case "ustensils":
-          tag.innerHTML = `<button class="btn btn-danger text-capitalize" type="button">
+            selectedTags.appliances.push(itemValue);
+            break;
+          case "ustensils":
+            tag.innerHTML = `<button class="btn btn-danger text-capitalize" type="button">
                             ${item.innerText} <i class="far fa-times-circle" aria-hidden="true"></i>
                           </button>`;
-          selectedTags.ustensils.push(item.innerText.toLowerCase());
-          break;
-        default:
-          break;
-      }
-      tagSection.appendChild(tag);
-      tag.querySelector(".fa-times-circle").addEventListener("click", (e) => {
-        tagSection.removeChild(tag);
-        removeTag(item);
-      });
-      if (filteredRecipes.length > 0) {
-        filterTags(filteredRecipes);
-      } else {
-        filterTags(recipes);
+            selectedTags.ustensils.push(itemValue);
+            break;
+          default:
+            break;
+        }
+        tagSection.appendChild(tag);
+        tag.querySelector(".fa-times-circle").addEventListener("click", (e) => {
+          tagSection.removeChild(tag);
+          removeTag(item);
+        });
+        if (filteredRecipes.length > 0) {
+          filterTags(filteredRecipes);
+        } else {
+          filterTags(recipes);
+        }
       }
     });
   });
@@ -288,7 +294,6 @@ function removeTag(item) {
       );
       break;
   }
-  console.log(selectedTags);
   if (filteredRecipes.length > 0) {
     filterTags(filteredRecipes);
   } else {
@@ -348,7 +353,6 @@ function filterDropdown(e) {
 //Depending on the clicked item category, we will search for the correspondante recipes inside the display ones
 function filterTags(recipesList) {
   let tempArray = recipesList;
-  console.log(tempArray);
   Object.entries(selectedTags).forEach((section) => {
     const [key, array] = section;
     if (array.length > 0) {
@@ -363,7 +367,6 @@ function filterTags(recipesList) {
             )
           );
         });
-        console.log(tempArray);
       } else if (key == "appliances") {
         tempArray = tempArray.filter((recipe) =>
           array.includes(recipe.appliance.toLowerCase())
