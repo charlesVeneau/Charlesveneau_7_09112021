@@ -373,11 +373,11 @@ function filterTags(recipesList) {
         );
       } else if (key == "ustensils") {
         tempArray = tempArray.filter((recipe) => {
-          array.every((entry) =>
-            recipe.ustensils.find(
+          return array.every((entry) => {
+            return recipe.ustensils.find(
               (ustensil) => ustensil.toLowerCase() == entry.toLowerCase()
-            )
-          );
+            );
+          });
         });
       }
     }
