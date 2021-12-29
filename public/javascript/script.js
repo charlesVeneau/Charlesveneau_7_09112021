@@ -1,13 +1,13 @@
-// import { createGallery } from "./modules/createGallery.js";
-
 let recipes;
 let ingredients = [];
 let appliances = [];
 let ustensils = [];
-let recipesFiltered = [];
+const recipesFiltered = [];
 const selectedTags = { ingredients: [], appliances: [], ustensils: [] };
 
 const dropdownBtns = document.querySelectorAll(".dropdowns .dropdown-toggle");
+const searchInput = document.querySelector("#main-search");
+let mainInput = "";
 
 const fetchData = async () => {
   const response = await fetch("assets/db.json");
@@ -17,7 +17,6 @@ const fetchData = async () => {
 
 fetchData()
   .then((data) => {
-    //console.log(data);
     recipes = data.recipes;
     createGallery(recipes);
     getDropdowns(recipes);
@@ -318,9 +317,6 @@ dropdownBtns.forEach((btn) => {
 });
 
 /* main input listener, check if the user type 3 characters and print them it the console */
-const searchInput = document.querySelector("#main-search");
-let mainInput = "";
-
 searchInput.addEventListener("keyup", (e) => {
   if (e.target.value.length >= 3) {
     mainInput = e.target.value.toLowerCase().trim();
@@ -328,14 +324,14 @@ searchInput.addEventListener("keyup", (e) => {
   } else {
     createGallery(recipes);
     getDropdowns(recipes);
-    filteredRecipes.length = 0;
+    recipesFiltered.length = 0;
   }
 });
 
 function findRecipe(array) {
   //loop through all the array elements
   recipesFiltered.length = 0;
-  let regex = `[^]*${mainInput}`;
+  const regex = `[^]*${mainInput}`;
   for (let i = 0; i < array.length; i++) {
     //for every element
     //is the mainInput is in the title or description
