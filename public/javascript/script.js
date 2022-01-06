@@ -27,6 +27,7 @@ fetchData()
     console.log(err);
   });
 
+//function that create card html documents and push it into the correct section of
 function createGallery(recipes) {
   const gallery = document.querySelector(".cardsGallery");
   if (gallery.classList.contains("justify-content-center"))
@@ -75,15 +76,15 @@ function createGallery(recipes) {
   });
 }
 
-//need a function to truncate the recipes description in order to create a preview
+//function to truncate the recipes description in order to create a preview
 function truncateString(str, num) {
-  //return the string if it's less or equal to the num
+  //return the string if it's less or equal to the number
   if (str.length <= num) return str;
   //return the string truncated and add ... at the end
-  return `${str.slice(0, num)}...`;
+  else return `${str.slice(0, num)}...`;
 }
 
-//In order to display the correct unit and quantity for the ingredients I check if the information is available
+//In order to display the correct unit and quantity for the ingredients, we check if the information is available
 function getUnits(ingredient) {
   if (ingredient.quantity) {
     if (ingredient.unit) return `${ingredient.quantity}${ingredient.unit}`;
@@ -92,14 +93,15 @@ function getUnits(ingredient) {
   return ``;
 }
 
+//calling function
 function getDropdowns(recipes) {
   getNecessary(recipes);
   //go all through all array entries and push everyone into the dropdown list
   makeDropdowns(ingredients, appliances, ustensils, recipes);
 }
 
+//function that create arrays containing the necessaries for the dislpayed recipies
 function getNecessary(recipes) {
-  //retrive in all the recipes, the appliances ustensils and ingredients
   appliances.length = 0;
   ustensils.length = 0;
   ingredients.length = 0;
@@ -112,24 +114,21 @@ function getNecessary(recipes) {
       ingredients.push(ingredient.ingredient.toLowerCase());
     });
   });
-  //clean the necessaries array and sort it alphabeticly
+
+  //clean the necessaries array and sort it alphabeticly (remove duplicate)
+  //first sort alphabeticly
   appliances.sort((a, b) => (a < b ? -1 : 1));
   let temp = appliances;
-  appliances = temp.filter((v, i) => {
-    return temp.indexOf(v) == i;
-  });
+  appliances = temp.filter((v, i) => temp.indexOf(v) == i);
   ustensils.sort((a, b) => (a < b ? -1 : 1));
   temp = ustensils;
-  ustensils = temp.filter((v, i) => {
-    return temp.indexOf(v) == i;
-  });
+  ustensils = temp.filter((v, i) => temp.indexOf(v) == i);
   ingredients.sort((a, b) => (a < b ? -1 : 1));
   temp = ingredients;
-  ingredients = temp.filter((v, i) => {
-    return temp.indexOf(v) == i;
-  });
+  ingredients = temp.filter((v, i) => temp.indexOf(v) == i);
 }
 
+//global function that will triger the same function for the three sets of necessaries
 function makeDropdowns(ingredients, appliances, ustensils) {
   //select all 3 dropdowns main element
   const ingredientsDropdown = document.querySelector(".ingredientsDropdown");
@@ -141,7 +140,7 @@ function makeDropdowns(ingredients, appliances, ustensils) {
   makeDropdown(ustensilsDropdown, ustensils, "ustensils");
 }
 
-//Function that will be trigger when the elements have a attributes mutation in order to display the lists properly
+//Function that will be trigger when the dropdowns have a attributes mutation (class) in order to display the lists properly
 function dropDownsListener(dropdownBtns) {
   dropdownBtns.forEach((btn) => {
     const numOfList = btn.parentNode.parentNode.querySelectorAll(
@@ -170,7 +169,8 @@ function dropDownsListener(dropdownBtns) {
   });
 }
 
-const makeDropdown = (domElement, list, listName, recipes) => {
+//function that get three arguments in order to create an interactive dropdown list. It checks the array argument length to set the correct bootstrap class
+const makeDropdown = (domElement, list, listName) => {
   domElement.querySelector(".dropdown-menu .row").innerHTML = "";
   splitArray(list).forEach((array, index) => {
     const dropdownCol = document.createElement("div");
@@ -192,8 +192,8 @@ const makeDropdown = (domElement, list, listName, recipes) => {
   dropdownItemListener(domElement);
 };
 
+//split an array depending of it's length, in order to get used to display only 30 elements in the dropdown list, but still get access to the other to user the tag input filtering
 function splitArray(array) {
-  // const TempArray = array.slice(0, 30);
   let mainArray = [];
   if (array.length > 30)
     return (mainArray = [
@@ -222,7 +222,7 @@ function dropdownItemListener(domElement) {
   dropdownItems.forEach((item) => {
     item.addEventListener("click", (e) => {
       //Need to see if the item is already in the selected tag list
-      //if the item is in one of the tags list don't do item
+      //if the item is in one of the tags list don't do it
       const itemValue = item.innerText.toLowerCase();
       let isAlreadyInTagList = false;
       Object.values(selectedTags).forEach((list) => {
@@ -267,6 +267,10 @@ function dropdownItemListener(domElement) {
           filterTags(recipes);
         }
       }
+      //clear the dropdown input
+      document.querySelector(
+        `input[data-category=${item.getAttribute("data-category")}`
+      ).value = "";
     });
   });
 }
@@ -335,6 +339,7 @@ searchInput.addEventListener("keyup", (e) => {
   }
 });
 
+//function that will use an array prototype to filter the dropdown list base on an input value
 function filterDropdown(e) {
   const tagSearch = e.target;
   const listName = tagSearch.getAttribute("data-category");
@@ -393,6 +398,7 @@ dropdownInputs.forEach((input) => {
   input.addEventListener("keyup", filterDropdown);
 });
 
+//functionnal search that use js prototypes to search information base on user input value
 function searchRecipes(value) {
   filteredRecipes = recipes.filter((recipe) => {
     if (recipe.name.toLowerCase().includes(value)) return true;
@@ -412,6 +418,7 @@ function searchRecipes(value) {
   }
 }
 
+//If the main search shows no recipe, this function is call to display an error message.
 function errorMessage() {
   const gallery = document.querySelector(".cardsGallery");
   gallery.innerHTML = "";
