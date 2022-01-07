@@ -335,22 +335,21 @@ searchInput.addEventListener("keyup", (e) => {
 
 //linear search function that use a regex to compare the input value with the name, description or ingredients of the recipe
 function findRecipe(array) {
-  //loop through all the array elements
   recipesFiltered.length = 0;
-
   /*[^] matches any character, including newline
    * matches the previous token between zero and unlimited times */
   const regex = `[^]*${mainInput}`;
+  //loop through all the array elements
   for (let i = 0; i < array.length; i++) {
     //for every element
-    //is the mainInput is in the title or description
+    //is the user input value is in the title or description
     if (
       array[i].name.toLowerCase().match(regex) ||
       array[i].description.toLowerCase().match(regex)
     )
       //if yes, then push the element into the recipesFiltered array
       recipesFiltered.push(array[i]);
-    //else is the mainInput is in the ingredients array
+    //else is the user input value is in the ingredients array
     else {
       for (let j = 0; j < array[i].ingredients.length; j++) {
         //if yes, then push the element into the recipesFiltered array
